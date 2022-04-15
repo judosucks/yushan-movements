@@ -27,9 +27,9 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.LogicUpdate();
 
-        player.CheckIfShouldFlip(xInput);
+       
 
-        player.SetVelocityX(xInput);
+       
 
         if(xInput == 0f)
         {
@@ -40,5 +40,6 @@ public class PlayerMoveState : PlayerGroundedState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
+        player.Run(1);
     }
 }
