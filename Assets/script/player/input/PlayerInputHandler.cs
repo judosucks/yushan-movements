@@ -13,7 +13,9 @@ public class PlayerInputHandler : MonoBehaviour
 
     //public static PlayerInputHandler instance;
 
-    //private PlayerInput playerInput;
+    private PlayerInput playerInput;
+
+    private Camera cam;
 
     public Vector2 RawMovementInput { get; private set; }
 
@@ -22,6 +24,8 @@ public class PlayerInputHandler : MonoBehaviour
     public float inputY { get; private set; }
 
     public bool JumpInput { get; private set; }
+
+    public bool JumpInputStop { get; private set; }
     //private void Awake()
     //{
     //    #region Singleton
@@ -48,7 +52,22 @@ public class PlayerInputHandler : MonoBehaviour
 
     //    #endregion
     //}
+    [SerializeField]
+    private float inputHoldTime = 0.2f;
 
+    private float jumpInputStartTime;
+    private float dashInputStartTime;
+    private void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+
+
+        cam = Camera.main;
+    }
+    private void Update()
+    {
+        //CheckJumpInputHoldTime();
+    }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementInput = context.ReadValue<Vector2>();
@@ -62,13 +81,23 @@ public class PlayerInputHandler : MonoBehaviour
         if (context.started)
         {
             JumpInput = true;
-            
+            JumpInputStop = false;
+            jumpInputStartTime = Time.time;
+        }
+        if (context.canceled)
+        {
+            JumpInputStop = true;
         }
         
     }
-    public void UseJumpInput()
+    public void UseJumpInput() => JumpInput = false;
+
+    private void CheckJumpInputHoldTime()
     {
-        JumpInput = false;
+        if(Time.time >= jumpInputStartTime * inputHoldTime)
+        {
+            JumpInput = false;
+        }
     }
     //#region Events
     //public class InputArgs

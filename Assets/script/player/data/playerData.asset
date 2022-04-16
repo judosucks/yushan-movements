@@ -28,7 +28,7 @@ MonoBehaviour:
   accelPower: 1.17
   stopPower: 0.58
   turnPower: 0.5
-  jumpForce: 7.5
+  jumpForce: 18.51
   jumpCutMultiplier: 0
   jumpBufferTime: 0
   doKeepRunMomentum: 0

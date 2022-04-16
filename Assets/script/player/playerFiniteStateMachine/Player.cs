@@ -99,6 +99,7 @@ public class Player : MonoBehaviour
     }
     public void Drag(float amount)
     {
+        Debug.Log("drag");
         Vector2 force = amount * rb.velocity.normalized;
         force.x = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(force.x));//ensure we only slow the player down, if the player is going really slowly we just apply a force stopping them 確定玩家的速度只會慢下來 當玩家速度真的很慢的時候 執行一個動力強迫玩家停下
                                                                           
@@ -153,7 +154,7 @@ public class Player : MonoBehaviour
 
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
         movement = Mathf.Lerp(rb.velocity.x, movement, lerpAmount);
-        Debug.Log("movement" + movement);
+      
         rb.AddForce(movement * Vector2.right); //applies force force to rigibody,multiplying by vector2.right so that it only affects X axis 執行動力來強迫rigibody乘以Vector2.right 將他只在x軌道發生作用
         
         if(InputHandler.inputX != 0)
@@ -161,21 +162,29 @@ public class Player : MonoBehaviour
             CheckDirectionToFace(InputHandler.inputX > 0);
         }
     }
-     public void Jump()
+
+    public void SetVelocityY(float velocity)
     {
-        //ensures we can't call a jump multiple times from one press
-        LastOnGroundTime = 0;
-        LastPressedJumpTime = 0;
-        #region perform jump
-        float force = playerData.jumpForce;
-        if(rb.velocity.y < 0)
-        {
-            Debug.Log("if"+rb.velocity.y);
-            force -= rb.velocity.y;
-        }
-        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        #endregion
+        Debug.Log("setveloctyy");
+        workspace.Set(CurrentVelocity.x, velocity);
+        rb.velocity = workspace;
+        CurrentVelocity = workspace;
     }
+    // public void Jump()
+    //{
+    //    //ensures we can't call a jump multiple times from one press
+    //    LastOnGroundTime = 0;
+    //    LastPressedJumpTime = 0;
+    //    #region perform jump
+    //    float force = playerData.jumpForce;
+    //    if(rb.velocity.y < 0)
+    //    {
+    //        Debug.Log("if"+rb.velocity.y);
+    //        force -= rb.velocity.y;
+    //    }
+    //    rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+    //    #endregion
+    //}
     private void Turn()
     {
         Vector3 scale = transform.localScale;//stores scale and flips x axis,"flipping" the entire gameObject around (could rotate the player instead)
@@ -192,7 +201,7 @@ public class Player : MonoBehaviour
         float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
         Speed = movementPerFrame / Time.deltaTime;
         PreviousFramePosition = transform.position;
-        Debug.Log("Speed" + Speed);
+        
     }
     private void AnimationTrigger() => stateMachine.CurrentState.AnimationTrigger();
 
