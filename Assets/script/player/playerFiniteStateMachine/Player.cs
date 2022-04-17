@@ -131,8 +131,8 @@ public class Player : MonoBehaviour
         float speedDif = targetSpeed - rb.velocity.x;//calculate differece between current velocity and desire velocity 計算當前速度跟預計的速度
        
         #region Acceleration Rate
-        float accelRate;
-        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
+        //float accelRate;
+        //accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
         //gets an accleration value based of if we are accelerating (includes turning) or trying to stop (decelerating).as well as applying a mutiplier if we are in air borne 加速跟減速 當玩家在空中時執行乘法落下(加速)
         //if(LastOnGroundTime > 0)
         //{
@@ -146,18 +146,22 @@ public class Player : MonoBehaviour
         //    Debug.Log("else lastongroundtime>0" + accelRate);
         //}
         //if we want to run but are already going faster than max run speed 假如玩家已經超出最高限速
-        if (((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
-        {
-            Debug.Log("prevent any deceleration");
-            accelRate = 0; // prevent any deceleration from happening, or in other words conserve are current momentum 預防減速發生 動力定律
-        }
+        //if (((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
+        //{
+        //    Debug.Log("prevent any deceleration");
+        //    accelRate = 0; // prevent any deceleration from happening, or in other words conserve are current momentum 預防減速發生 動力定律
+        //}
         #endregion
         #region Velocity Power
         float velPower;
-        if(Mathf.Abs(targetSpeed)< 0.01f)
+        if (Mathf.Abs(targetSpeed) < 0.01f)
         {
-           
+
             velPower = playerData.stopPower;
+        }
+        else if (Mathf.Abs(rb.velocity.x) > 0 && (Mathf.Sign(targetSpeed) != Mathf.Sign(rb.velocity.x)))
+        {
+            velPower = playerData.turnPower;
         }
         else
         {
@@ -169,7 +173,7 @@ public class Player : MonoBehaviour
 
 
 
-        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
+        float movement = Mathf.Pow(Mathf.Abs(speedDif), velPower) * Mathf.Sign(speedDif);
         movement = Mathf.Lerp(rb.velocity.x, movement, lerpAmount);
       
         rb.AddForce(movement * Vector2.right); //applies force force to rigibody,multiplying by vector2.right so that it only affects X axis 執行動力來強迫rigibody乘以Vector2.right 將他只在x軌道發生作用
