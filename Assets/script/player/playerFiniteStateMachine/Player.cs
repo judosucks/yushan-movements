@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
+    public static Player instance;
     #region State Variables
     public PlayerStateMachine stateMachine { get; private set; }
 
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 
     public SpriteRenderer spriteRenderer { get; private set; }
 
-    public Vector3 CurrentVelocity { get; private set; }
+    public Vector2 CurrentVelocity { get; private set; }
 
     public int facingDirection { get; private set; }
 
@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     #endregion
 
-
+    private bool isGrounded;
 
     private Vector2 workspace;
     #region OTHER VARIABLES
@@ -54,6 +54,19 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        #region Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        #endregion
+
         stateMachine = new PlayerStateMachine();
 
         IdleState = new PlayerIdleState(this,stateMachine,playerData,"idle");
@@ -99,15 +112,16 @@ public class Player : MonoBehaviour
     }
     public void Drag(float amount)
     {
-        Debug.Log("drag");
+        
         Vector2 force = amount * rb.velocity.normalized;
         force.x = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(force.x));//ensure we only slow the player down, if the player is going really slowly we just apply a force stopping them 確定玩家的速度只會慢下來 當玩家速度真的很慢的時候 執行一個動力強迫玩家停下
                                                                           
         force.y = Mathf.Min(Mathf.Abs(rb.velocity.y), Mathf.Abs(force.y));
         force.x *= Mathf.Sign(rb.velocity.x);//finds direction to apply force 在x軌道找出執行動力的方向
         force.y *= Mathf.Sign(rb.velocity.y);
-
+        
         rb.AddForce(-force, ForceMode2D.Impulse);
+        Debug.Log("drag" + -force);
     }
     public void Run(float lerpAmount)
     {
@@ -115,22 +129,24 @@ public class Player : MonoBehaviour
         CalculateSpeed();
         float targetSpeed = InputHandler.inputX * playerData.runMaxSpeed;//calculate the direction we want to move in our desire velocity 計算預計行動的方向速度
         float speedDif = targetSpeed - rb.velocity.x;//calculate differece between current velocity and desire velocity 計算當前速度跟預計的速度
-        Debug.Log(targetSpeed+"+"+speedDif);
+       
         #region Acceleration Rate
         float accelRate;
-
+        accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
         //gets an accleration value based of if we are accelerating (includes turning) or trying to stop (decelerating).as well as applying a mutiplier if we are in air borne 加速跟減速 當玩家在空中時執行乘法落下(加速)
-        if(LastOnGroundTime > 0)
-        {
-            Debug.Log("lastongroundtime");
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
-        }
-        else
-        {
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel * playerData.accelInAir : playerData.runDeccel * playerData.deccelInAir;
-        }
+        //if(LastOnGroundTime > 0)
+        //{
+        //    Debug.Log("lastongroundtime");
+        //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
+        //}
+        //else
+        //{
+
+        //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel * playerData.accelInAir : playerData.runDeccel * playerData.deccelInAir;
+        //    Debug.Log("else lastongroundtime>0" + accelRate);
+        //}
         //if we want to run but are already going faster than max run speed 假如玩家已經超出最高限速
-        if(((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
+        if (((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
         {
             Debug.Log("prevent any deceleration");
             accelRate = 0; // prevent any deceleration from happening, or in other words conserve are current momentum 預防減速發生 動力定律
@@ -140,11 +156,12 @@ public class Player : MonoBehaviour
         float velPower;
         if(Mathf.Abs(targetSpeed)< 0.01f)
         {
-            Debug.Log("velpower"+Mathf.Abs(-100)+"+"+Mathf.Abs(100));
+           
             velPower = playerData.stopPower;
         }
         else
         {
+           
             velPower = playerData.accelPower;
         }
         #endregion
@@ -165,26 +182,28 @@ public class Player : MonoBehaviour
 
     public void SetVelocityY(float velocity)
     {
-        Debug.Log("setveloctyy");
-        workspace.Set(CurrentVelocity.x, velocity);
+        
+        workspace.Set(rb.velocity.x, velocity);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
+        Debug.Log("setveloctyy"+CurrentVelocity.y+"cur rb"+rb.velocity.y);
     }
-    // public void Jump()
-    //{
-    //    //ensures we can't call a jump multiple times from one press
-    //    LastOnGroundTime = 0;
-    //    LastPressedJumpTime = 0;
-    //    #region perform jump
-    //    float force = playerData.jumpForce;
-    //    if(rb.velocity.y < 0)
-    //    {
-    //        Debug.Log("if"+rb.velocity.y);
-    //        force -= rb.velocity.y;
-    //    }
-    //    rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-    //    #endregion
-    //}
+    public void Jump()
+    {
+        //ensures we can't call a jump multiple times from one press
+        LastOnGroundTime = 0;
+        LastPressedJumpTime = 0;
+        #region perform jump
+        float force = playerData.jumpForce;
+
+        if (rb.velocity.y < 0)
+        {
+            Debug.Log("if" + rb.velocity.y);
+            force -= rb.velocity.y;
+        }
+        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        #endregion
+    }
     private void Turn()
     {
         Vector3 scale = transform.localScale;//stores scale and flips x axis,"flipping" the entire gameObject around (could rotate the player instead)
@@ -203,9 +222,9 @@ public class Player : MonoBehaviour
         PreviousFramePosition = transform.position;
         
     }
-    private void AnimationTrigger() => stateMachine.CurrentState.AnimationTrigger();
+    public void AnimationTrigger() => stateMachine.CurrentState.AnimationTrigger();
 
-    private void AnimationFinishTrigger() => stateMachine.CurrentState.AnimationFinishTrigger();
+    public void AnimationFinishTrigger() => stateMachine.CurrentState.AnimationFinishTrigger();
 
     #endregion
     //public void SetVelocityX(float velocity)
@@ -233,15 +252,17 @@ public class Player : MonoBehaviour
     public bool CheckIsGrounded()
     {
         //ground check
-        if (Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround))
+         if(Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround))
         {
-            LastOnGroundTime = playerData.coyoteTime;//if so sets the lastGrounded to coyoteTime
+            isGrounded = true;
             return true;
         }
         else
         {
+            isGrounded = false;
             return false;
         }
+        
         
     }
     #endregion

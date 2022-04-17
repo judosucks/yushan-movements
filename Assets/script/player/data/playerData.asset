@@ -15,25 +15,26 @@ MonoBehaviour:
   gravityScale: 2.09
   fallGravityMult: 0
   quickFallGravityMult: 0
-  dragAmount: 4.21
-  frictionAmount: 3.51
+  dragAmount: 1.12
+  frictionAmount: 1.43
   coyoteTime: 0
   movementSpeed: 5
   movementAcceleration: 10
-  runMaxSpeed: 20.27
-  runAccel: 15
-  runDeccel: 0.7
-  accelInAir: 0.59
-  deccelInAir: 0.17
-  accelPower: 1.17
-  stopPower: 0.58
+  runMaxSpeed: 20.39
+  runAccel: 9.4
+  runDeccel: 0.04
+  accelInAir: 0.36
+  deccelInAir: 0.15
+  accelPower: 1.41
+  stopPower: 0.5
   turnPower: 0.5
-  jumpForce: 18.51
+  jumpForce: 20.67
   jumpCutMultiplier: 0
   jumpBufferTime: 0
+  amountOfJumps: 2
   doKeepRunMomentum: 0
   doTurnOnWallJump: 0
-  groundCheckRadius: 0.3
+  groundCheckRadius: 0.98
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

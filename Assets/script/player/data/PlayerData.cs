@@ -40,6 +40,7 @@ public class PlayerData :ScriptableObject
     [Range(0, 1)] public float jumpCutMultiplier;
     [Space(10)]
     [Range(0, 0.5f)] public float jumpBufferTime;//time after pressing the jump button where if the requirements are met a jump will be automatically performed
+    public int amountOfJumps = 1;
                                                  //OTHER
     [Header("Other Settings")]
     public bool doKeepRunMomentum; //player movement will not decrease speed if above maxSpeed, letting only drag do so. Allows for conservation of momentum

@@ -66,7 +66,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void Update()
     {
-        //CheckJumpInputHoldTime();
+        CheckJumpInputHoldTime();
     }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -80,22 +80,25 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (context.started)
         {
+            Debug.Log("pressed jump");
             JumpInput = true;
             JumpInputStop = false;
             jumpInputStartTime = Time.time;
         }
-        if (context.canceled)
-        {
-            JumpInputStop = true;
-        }
+        
         
     }
-    public void UseJumpInput() => JumpInput = false;
+    public void UseJumpInput()
+    {
+        JumpInput = false;
+        Debug.Log("usejumpinput from inputhandler" + JumpInput);
+    } 
 
     private void CheckJumpInputHoldTime()
     {
-        if(Time.time >= jumpInputStartTime * inputHoldTime)
+        if(Time.time >= jumpInputStartTime + inputHoldTime)
         {
+            Debug.Log("checkjumpinputHoldTime");
             JumpInput = false;
         }
     }

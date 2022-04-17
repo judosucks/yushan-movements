@@ -38,10 +38,12 @@ public class PlayerAbilityState : PlayerState
         {
             if (isGrounded && player.rb.velocity.y < 0.01f)
             {
+                Debug.Log("on ground"+isGrounded);
                 stateMachine.ChangeState(player.IdleState);
             }
             else
             {
+                Debug.Log("inairstate"+player.CurrentVelocity.y);
                 stateMachine.ChangeState(player.InAirState);
             }
         }
