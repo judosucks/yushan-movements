@@ -18,7 +18,7 @@ public class PlayerGroundedState : PlayerState
     {
         base.DoChecks();
 
-        isGrounded = player.CheckIsGrounded();
+        isGrounded = player.CheckGrounded();
     }
 
     public override void Enter()
@@ -45,7 +45,7 @@ public class PlayerGroundedState : PlayerState
             Debug.Log("ongroundstate usejumpinput from playerinputhandler" +JumpInput);
         }else if (!isGrounded)
         {
-            player.JumpState.DeCreaseAmountOfJumpsLeft();
+            player.InAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.InAirState);
         }
     }
@@ -53,7 +53,8 @@ public class PlayerGroundedState : PlayerState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
-        //player.Drag(playerData.frictionAmount);
+        
         //Debug.Log("drag from groundstate");
+       
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAbilityState : PlayerState
 {
     protected bool isAbilityDone;
-
+    protected bool isAnilityRunJumpDone;
     private bool isGrounded;
 
     public PlayerAbilityState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
@@ -23,6 +23,7 @@ public class PlayerAbilityState : PlayerState
         base.Enter();
 
         isAbilityDone = false;
+        isAnilityRunJumpDone = false;
     }
 
     public override void Exit()
@@ -45,6 +46,19 @@ public class PlayerAbilityState : PlayerState
             {
                 Debug.Log("inairstate"+player.CurrentVelocity.y);
                 stateMachine.ChangeState(player.InAirState);
+            }
+        }
+        if (isAnilityRunJumpDone)
+        {
+            if(isGrounded && player.rb.velocity.y < 0.01f)
+            {
+                Debug.Log("onground run jump");
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else
+            {
+                Debug.Log("going run jump in air state");
+                stateMachine.ChangeState(player.RunJumpInAirState);
             }
         }
     }

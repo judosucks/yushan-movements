@@ -13,7 +13,10 @@ public class Player : MonoBehaviour
     public PlayerJumpState JumpState { get; private set; }
     public PlayerInAirState InAirState { get; private set; }
     public PlayerLandState LandState { get; private set; }
-    
+    public PlayerRunJump RunJumpState { get; private set; }
+    public PlayerRunJumpInAir RunJumpInAirState { get; private set; }
+    public PlayerRunJumpLanding RunJumpLandState { get; private set; }
+
     [SerializeField]
     private PlayerData playerData;
     #endregion
@@ -48,10 +51,11 @@ public class Player : MonoBehaviour
 
     private Vector2 workspace;
     #region OTHER VARIABLES
-     private Vector2 PreviousFramePosition = Vector2.zero; //initial position
-    private float Speed = 0f;
+    private Vector2 PreviousFramePosition = Vector2.zero; //initial position
+    public float Speed { get; private set; }
     #endregion
-
+    //change direction
+    public bool changeingDirection => (rb.velocity.x > 0f && InputHandler.inputX < 0f) || (rb.velocity.x < 0f && InputHandler.inputX > 0f);
     private void Awake()
     {
         #region Singleton
@@ -74,6 +78,11 @@ public class Player : MonoBehaviour
         JumpState = new PlayerJumpState(this, stateMachine, playerData, "inAir");
         InAirState = new PlayerInAirState(this, stateMachine, playerData, "inAir");
         LandState = new PlayerLandState(this,stateMachine,playerData,"land");
+        RunJumpState = new PlayerRunJump(this, stateMachine, playerData, "runJumpInAir");
+        RunJumpInAirState = new PlayerRunJumpInAir(this, stateMachine, playerData, "runJumpInAir");
+        RunJumpLandState = new PlayerRunJumpLanding(this, stateMachine, playerData, "runJumpLand");
+        isGrounded = CheckGrounded();
+        
     }
     private void Start()
     {
@@ -96,7 +105,10 @@ public class Player : MonoBehaviour
         LastPressedJumpTime -= Time.deltaTime;
         #endregion
         CurrentVelocity = rb.velocity;
+        Speed = Mathf.Abs(CurrentVelocity.x);
         stateMachine.CurrentState.LogicUpdate();
+       
+        OnDrawGizmos();
     }
     private void FixedUpdate()
     {
@@ -183,7 +195,104 @@ public class Player : MonoBehaviour
             CheckDirectionToFace(InputHandler.inputX > 0);
         }
     }
+   
+    public void MoveCharacter()
+    {
+        
 
+        rb.AddForce(new Vector2(InputHandler.inputX, 0f) * playerData.movementAcceleration);
+        float targetSpeed = InputHandler.inputX * playerData.movementAcceleration;
+        float speedDif = targetSpeed - rb.velocity.x;
+        
+        float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
+        Speed = movementPerFrame / Time.deltaTime;
+        PreviousFramePosition = transform.position;
+        Debug.Log(Mathf.Abs(rb.velocity.x) +"+"+ targetSpeed +"+"+ Speed +"+"+ speedDif +"+"+ Mathf.Abs(PreviousFramePosition.x));
+        if (Mathf.Abs(rb.velocity.x)> playerData.moveMaxSpeed)
+        {
+            Debug.Log("math.abs rb.v.x" +Mathf.Abs(rb.velocity.x));
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerData.moveMaxSpeed, CurrentVelocity.y);
+            
+        }
+        if (InputHandler.inputX != 0 && isGrounded)
+        {
+            CheckDirectionToFace(InputHandler.inputX > 0);
+        }
+    }
+    public void Jumping(float velocity)
+    {
+        workspace.Set(Speed, velocity);
+        rb.velocity = CurrentVelocity;
+        CurrentVelocity = workspace;
+        if (RunJumpInAirState.isRunJumping)
+        {
+            Debug.Log("isrunjumping from jumping player");
+            workspace.Set(Speed, velocity * playerData.jumpForce);
+            rb.velocity = workspace;
+            CurrentVelocity = workspace;
+        }
+        else
+        {
+            rb.AddForce(new Vector2( Speed , velocity * playerData.jumpForce), ForceMode2D.Impulse);
+            Debug.Log("run jumping" + Speed);
+        }
+        
+    }
+    public void StraightJump()
+    {
+        float absoluteZero = 0f;
+        workspace.Set(absoluteZero, CurrentVelocity.y);
+        rb.velocity = CurrentVelocity;
+        CurrentVelocity = workspace;
+        if(absoluteZero > 0 || absoluteZero < 0)
+        {
+            Debug.Log("straight jump"+absoluteZero);
+            absoluteZero = 0f;
+            Debug.Log(absoluteZero);
+            rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
+            Debug.Log(absoluteZero);
+        }
+        else if(absoluteZero == 0)
+        {
+            Debug.Log("else straight jump"+absoluteZero);
+            absoluteZero = 0f;
+            Debug.Log(absoluteZero);
+            rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
+            Debug.Log(absoluteZero);
+        }
+        else
+        {
+            Debug.Log("straight jump else shit");
+        }
+        //rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
+        Debug.Log("straight jump");
+    }
+    public void ApplyGroundLinearDrag()
+    {
+        if(Mathf.Abs(InputHandler.inputX)< 0.4f || changeingDirection)
+        {
+            Debug.Log("apply ground linear drag");
+            rb.drag = playerData.groundLinearDrag;
+        }
+        else
+        {
+            
+            rb.drag = 0f;
+        }
+    }
+    public void ApplyAirLinearDrag()
+    {
+        Debug.Log("apply air linear drag");
+        rb.drag = playerData.airLinearDrag;
+    }
+    public void SetVelocityX(float velocity)
+    {
+        workspace.Set(velocity, rb.velocity.y);
+        rb.velocity = workspace;
+        CurrentVelocity = workspace;
+        Debug.Log("currentvelocityx");
+
+    }
     public void SetVelocityY(float velocity)
     {
         
@@ -224,6 +333,7 @@ public class Player : MonoBehaviour
         float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
         Speed = movementPerFrame / Time.deltaTime;
         PreviousFramePosition = transform.position;
+        Debug.Log(Speed);
         
     }
     public void AnimationTrigger() => stateMachine.CurrentState.AnimationTrigger();
@@ -268,6 +378,23 @@ public class Player : MonoBehaviour
         }
         
         
+    }
+    public bool CheckGrounded()
+    {
+       isGrounded = Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
+        if (isGrounded)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * playerData.groundRayCastLength);
     }
     #endregion
 }

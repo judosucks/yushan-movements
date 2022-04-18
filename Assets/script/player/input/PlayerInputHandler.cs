@@ -26,37 +26,24 @@ public class PlayerInputHandler : MonoBehaviour
     public bool JumpInput { get; private set; }
 
     public bool JumpInputStop { get; private set; }
-    //private void Awake()
-    //{
-    //    #region Singleton
-    //    if(instance == null)
-    //    {
-    //        instance = this;
-    //        DontDestroyOnLoad(gameObject);
-    //    }
-    //    else
-    //    {
-    //        Destroy(gameObject);
-    //        return;
-    //    }
-    //    #endregion
 
-    //    playerInput = new PlayerInput();
+    public bool RunJumpInputStop { get; private set; }
 
-    //    #region Assign Inputs
-    //    playerInput.Gameplay.Move.performed += ctx => RawMovementInput = ctx.ReadValue<Vector2>();
-    //    playerInput.Gameplay.Move.canceled += ctx => RawMovementInput = Vector2.zero;
+    public bool RunJumpInput { get; private set; }
 
-    //    playerInput.Gameplay.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx });
-    //    playerInput.Gameplay.Jump.performed += ctx => OnJumpPressed(new InputArgs { context = ctx });
-
-    //    #endregion
-    //}
+    public Player player { get; private set; }
+   
     [SerializeField]
     private float inputHoldTime = 0.2f;
-
+   
     private float jumpInputStartTime;
     private float dashInputStartTime;
+    private float runJumpInputStartTime;
+
+    private void Awake()
+    {
+        player = GetComponent<Player>();
+    }
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -67,6 +54,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void Update()
     {
         CheckJumpInputHoldTime();
+        CheckRunJumpInputHoldTime();
     }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -74,6 +62,23 @@ public class PlayerInputHandler : MonoBehaviour
 
         inputX = RawMovementInput.x;
         inputY = RawMovementInput.y;
+        if (context.started)
+        {
+            Debug.Log("pressed move");
+
+        }
+        if (context.canceled)
+        {
+            if (player.CheckGrounded())
+            {
+                Debug.Log("not pressed move apple ground linear drag");
+                player.ApplyGroundLinearDrag();
+            }else if (!player.CheckGrounded())
+            {
+                player.ApplyAirLinearDrag();
+            }
+            
+        }
         
     }
    public void OnJumpInput(InputAction.CallbackContext context)
@@ -85,15 +90,43 @@ public class PlayerInputHandler : MonoBehaviour
             JumpInputStop = false;
             jumpInputStartTime = Time.time;
         }
+        if (context.canceled)
+        {
+            JumpInputStop = true;
+        }
         
         
+    }
+    public void OnRunJumpInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            RunJumpInput = true;
+            RunJumpInputStop = false;
+            runJumpInputStartTime = Time.time;
+        }
+        if (context.canceled)
+        {
+            RunJumpInputStop = true;
+        }
     }
     public void UseJumpInput()
     {
         JumpInput = false;
         Debug.Log("usejumpinput from inputhandler" + JumpInput);
     } 
-
+    public void UseRunJumpInput()
+    {
+        RunJumpInput = false;
+    }
+    private void CheckRunJumpInputHoldTime()
+    {
+        if(Time.time >= runJumpInputStartTime + inputHoldTime)
+        {
+            Debug.Log("checkrunjumpinputholdtime");
+            RunJumpInput = false;
+        }
+    }
     private void CheckJumpInputHoldTime()
     {
         if(Time.time >= jumpInputStartTime + inputHoldTime)

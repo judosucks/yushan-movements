@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMoveState : PlayerGroundedState
 {
+    private bool isGrounded;
+
     public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -11,6 +13,7 @@ public class PlayerMoveState : PlayerGroundedState
     public override void DoChecks()
     {
         base.DoChecks();
+        isGrounded = player.CheckGrounded();
     }
 
     public override void Enter()
@@ -40,6 +43,19 @@ public class PlayerMoveState : PlayerGroundedState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
-        player.Run(1);
+        //player.Run(1);
+        player.MoveCharacter();
+        //player.ApplyGroundLinearDrag();
+        if (isGrounded)
+        {
+            Debug.Log("player drag from movestate" + isGrounded);
+            //player.Drag(playerData.frictionAmount);
+            player.ApplyGroundLinearDrag();
+        }
+        else
+        {
+            Debug.Log("player airlineardrage from groundedstate");
+            player.ApplyAirLinearDrag();
+        }
     }
 }

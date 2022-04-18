@@ -21,8 +21,7 @@ public class PlayerData :ScriptableObject
 
     //GROUND
     [Header("Move State")]
-    public float movementSpeed;
-    public float movementAcceleration = 10f;
+    
 
     public float runMaxSpeed;
     public float runAccel;
@@ -33,6 +32,16 @@ public class PlayerData :ScriptableObject
     [Range(.5f, 2f)] public float accelPower;
     [Range(.5f, 2f)] public float stopPower;
     [Range(.5f, 2f)] public float turnPower;
+    //new move variables
+    public float movementAcceleration;
+    public float moveMaxSpeed;
+    public float groundLinearDrag;
+    public float airLinearDrag;
+
+    [Header("in air state")]
+    public float variableJumpHeightMultiplier = 0.5f;
+    public float variableJumpMoveMultiplier = 0.5f;
+    public float variableRunJumpHeightMultiplier = 0.5f;
 
     //jump
     [Header("Jump")]
@@ -41,7 +50,8 @@ public class PlayerData :ScriptableObject
     [Space(10)]
     [Range(0, 0.5f)] public float jumpBufferTime;//time after pressing the jump button where if the requirements are met a jump will be automatically performed
     public int amountOfJumps = 1;
-                                                 //OTHER
+    [Range(0,100f)]public float straightJumpHeight;
+    //OTHER
     [Header("Other Settings")]
     public bool doKeepRunMomentum; //player movement will not decrease speed if above maxSpeed, letting only drag do so. Allows for conservation of momentum
     public bool doTurnOnWallJump; //player will rotate to face wall jumping direction
@@ -49,4 +59,11 @@ public class PlayerData :ScriptableObject
     [Header("check variables")]
     public float groundCheckRadius = 0.3f;
     public LayerMask whatIsGround;
+    public float groundRayCastLength;
+
+
+    [Header("run jump")]
+    public int amountOfRunJumps = 1;
+
+    
 }

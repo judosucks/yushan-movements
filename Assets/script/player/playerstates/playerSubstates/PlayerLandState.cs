@@ -13,7 +13,7 @@ public class PlayerLandState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        
+        Debug.Log("landingstate");
         if(xInput != 0)
         {
             Debug.Log("xinput != 0 from playerlandstate");
