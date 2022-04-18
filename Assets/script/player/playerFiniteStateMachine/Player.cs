@@ -104,8 +104,8 @@ public class Player : MonoBehaviour
         LastOnGroundTime -= Time.deltaTime;
         LastPressedJumpTime -= Time.deltaTime;
         #endregion
-        CurrentVelocity = rb.velocity;
-        Speed = Mathf.Abs(CurrentVelocity.x);
+  
+      
         stateMachine.CurrentState.LogicUpdate();
        
         OnDrawGizmos();
@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
         float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
         Speed = movementPerFrame / Time.deltaTime;
         PreviousFramePosition = transform.position;
-        Debug.Log(Mathf.Abs(rb.velocity.x) +"+"+ targetSpeed +"+"+ Speed +"+"+ speedDif +"+"+ Mathf.Abs(PreviousFramePosition.x));
+       
         if (Mathf.Abs(rb.velocity.x)> playerData.moveMaxSpeed)
         {
             Debug.Log("math.abs rb.v.x" +Mathf.Abs(rb.velocity.x));
@@ -219,53 +219,47 @@ public class Player : MonoBehaviour
             CheckDirectionToFace(InputHandler.inputX > 0);
         }
     }
-    public void Jumping(float velocity)
+    public void Jumping()
     {
-        workspace.Set(Speed, velocity);
-        rb.velocity = CurrentVelocity;
-        CurrentVelocity = workspace;
-        if (RunJumpInAirState.isRunJumping)
-        {
-            Debug.Log("isrunjumping from jumping player");
-            workspace.Set(Speed, velocity * playerData.jumpForce);
-            rb.velocity = workspace;
-            CurrentVelocity = workspace;
-        }
-        else
-        {
-            rb.AddForce(new Vector2( Speed , velocity * playerData.jumpForce), ForceMode2D.Impulse);
-            Debug.Log("run jumping" + Speed);
-        }
+        float force = playerData.jumpForce;
+        rb.velocity = new Vector2(rb.velocity.x,Mathf.Abs(CurrentVelocity.y));
+      
+        rb.AddForce(Vector2.up * force, ForceMode2D.Force);
+        //rb.AddForce(new Vector2(rb.velocity.x,rb.velocity.y)*playerData.jumpForce);
+            Debug.Log("run jumping" + rb.velocity.y);
+        
         
     }
     public void StraightJump()
     {
         float absoluteZero = 0f;
-        workspace.Set(absoluteZero, CurrentVelocity.y);
-        rb.velocity = CurrentVelocity;
-        CurrentVelocity = workspace;
-        if(absoluteZero > 0 || absoluteZero < 0)
-        {
-            Debug.Log("straight jump"+absoluteZero);
-            absoluteZero = 0f;
-            Debug.Log(absoluteZero);
-            rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
-            Debug.Log(absoluteZero);
-        }
-        else if(absoluteZero == 0)
-        {
-            Debug.Log("else straight jump"+absoluteZero);
-            absoluteZero = 0f;
-            Debug.Log(absoluteZero);
-            rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
-            Debug.Log(absoluteZero);
-        }
-        else
-        {
-            Debug.Log("straight jump else shit");
-        }
+        float force = playerData.straightJumpHeight;
+    
+        rb.velocity = new Vector2(absoluteZero, Mathf.Abs(CurrentVelocity.y));
+        rb.AddForce(Vector2.up * force, ForceMode2D.Force);
+        Debug.Log("excuted straightjump");
+        //if(absoluteZero > 0 || absoluteZero < 0 || absoluteZero != 0f)
+        //{
+        //    Debug.Log("straight jump"+absoluteZero);
+        //    absoluteZero = 0f;
+        //    Debug.Log(absoluteZero);
+        //    rb.velocity = new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight);
+        //    Debug.Log(absoluteZero);
+        //}
+        //else if(absoluteZero == 0)
+        //{
+        //    Debug.Log("else straight jump"+absoluteZero);
+        //    absoluteZero = 0f;
+        //    Debug.Log(absoluteZero);
+        //    rb.velocity = new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight);
+        //    Debug.Log(absoluteZero);
+        //}
+        //else
+        //{
+        //    Debug.Log("straight jump else shit");
+        //}
         //rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
-        Debug.Log("straight jump");
+       
     }
     public void ApplyGroundLinearDrag()
     {

@@ -6,23 +6,37 @@ public class PlayerRunJump : PlayerAbilityState
 {
     private int amountOfRunJumpsLeft;
 
+    
+
     public PlayerRunJump(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
         amountOfRunJumpsLeft = playerData.amountOfRunJumps;
+        
     }
-
     public override void DoChecks()
     {
         base.DoChecks();
+        
     }
 
     public override void Enter()
     {
         base.Enter();
-        player.Jumping(player.CurrentVelocity.y);
-        isAnilityRunJumpDone = true;
-        amountOfRunJumpsLeft--;
-        player.RunJumpInAirState.SetIsRunJumping();
+        
+      
+            Debug.Log("excuting from run jump state");
+        player.SetVelocityY(playerData.jumpForce);
+
+       isAnilityRunJumpDone = true;
+            amountOfRunJumpsLeft--;
+            player.RunJumpInAirState.SetIsRunJumping();
+            //}else if(player.InputHandler.inputX == 0f)
+            //{
+            //    Debug.Log("change to jump state from runjump state");
+            //    stateMachine.ChangeState(player.JumpState);
+            //}
+        
+       
     }
 
     public override void Exit()
@@ -43,6 +57,7 @@ public class PlayerRunJump : PlayerAbilityState
     {
         if(amountOfRunJumpsLeft > 0)
         {
+            Debug.Log("can run jump");
             return true;
         }
         else

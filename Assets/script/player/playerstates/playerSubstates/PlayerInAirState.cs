@@ -52,7 +52,7 @@ public class PlayerInAirState : PlayerState
         
 
         Debug.Log("isgrounded from inaire" + isGrounded+"xinput"+xInput);
-        if(isGrounded && player.CurrentVelocity.y < 0.01f)
+        if(isGrounded && player.CurrentVelocity.y < 0.01f && xInput == 0)
         {
             Debug.Log("isgrounded" + isGrounded+"inairstate currentvelocityy"+player.CurrentVelocity.y);
             stateMachine.ChangeState(player.LandState);
@@ -63,10 +63,10 @@ public class PlayerInAirState : PlayerState
         }
         else
         {
-            
-            
-            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
-            player.Anim.SetFloat("xVelocity",Mathf.Abs( player.CurrentVelocity.x));
+
+            player.MoveCharacter();
+            player.Anim.SetFloat("yVelocity", player.rb.velocity.y);
+            player.Anim.SetFloat("xVelocity",Mathf.Abs( player.rb.velocity.x));
             Debug.Log("isnot grounded"+player.rb.velocity.x+""+player.CurrentVelocity.y);
         }
     }

@@ -53,8 +53,17 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void Update()
     {
-        CheckJumpInputHoldTime();
-        CheckRunJumpInputHoldTime();
+        if(inputX == 0f)
+        {
+            Debug.Log("straight jump inpux == 0");
+            CheckJumpInputHoldTime();
+        }else if(inputX != 0f)
+        {
+            Debug.Log("runjump");
+            CheckRunJumpInputHoldTime();
+        }
+        
+        
     }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -75,6 +84,7 @@ public class PlayerInputHandler : MonoBehaviour
                 player.ApplyGroundLinearDrag();
             }else if (!player.CheckGrounded())
             {
+                Debug.Log("applyairlineardrag");
                 player.ApplyAirLinearDrag();
             }
             
@@ -83,15 +93,16 @@ public class PlayerInputHandler : MonoBehaviour
     }
    public void OnJumpInput(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && inputX == 0f)
         {
             Debug.Log("pressed jump");
             JumpInput = true;
             JumpInputStop = false;
             jumpInputStartTime = Time.time;
         }
-        if (context.canceled)
+        if (context.canceled && JumpInput)
         {
+            Debug.Log("released jump");
             JumpInputStop = true;
         }
         
@@ -99,14 +110,16 @@ public class PlayerInputHandler : MonoBehaviour
     }
     public void OnRunJumpInput(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && inputX != 0f)
         {
+            Debug.Log("pressed run jump");
             RunJumpInput = true;
             RunJumpInputStop = false;
             runJumpInputStartTime = Time.time;
         }
-        if (context.canceled)
+        if (context.canceled && RunJumpInput)
         {
+            Debug.Log("released run jump");
             RunJumpInputStop = true;
         }
     }
@@ -118,6 +131,7 @@ public class PlayerInputHandler : MonoBehaviour
     public void UseRunJumpInput()
     {
         RunJumpInput = false;
+        Debug.Log("userunjumpinput from inputhandler");
     }
     private void CheckRunJumpInputHoldTime()
     {

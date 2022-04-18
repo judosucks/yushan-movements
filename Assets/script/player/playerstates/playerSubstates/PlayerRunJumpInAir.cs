@@ -48,18 +48,20 @@ public class PlayerRunJumpInAir : PlayerState
         runJumpInput = player.InputHandler.RunJumpInput;
         runJumpInputStop = player.InputHandler.RunJumpInputStop;
 
-        if(isGrounded && player.CurrentVelocity.y < 0.01f)
+        if(isGrounded && player.CurrentVelocity.y < 0.01f && xInput != 0)
         {
+            Debug.Log("isgrounded going to runjumplandstate");
             stateMachine.ChangeState(player.RunJumpLandState);
         }else if(runJumpInput && canRunJump)
         {
+            Debug.Log("going to run jump state from in air state");
             stateMachine.ChangeState(player.RunJumpState);
         }
         else
         {
             player.MoveCharacter();
-            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
-            player.Anim.SetFloat("xVelocity",Mathf.Abs(player.CurrentVelocity.x));
+            player.Anim.SetFloat("y", player.CurrentVelocity.y);
+            player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
             Debug.Log("is not grounded");
         }
 
@@ -69,10 +71,7 @@ public class PlayerRunJumpInAir : PlayerState
     {
         base.PhysicUpdate();
     }
-    public void SetIsRunJumping()
-    {
-
-    }
+    
     private void CheckCoyoteTime()
     {
         if(coyoteTime && Time.time > startTime + playerData.coyoteTime)
@@ -89,7 +88,7 @@ public class PlayerRunJumpInAir : PlayerState
         if (isRunJumping)
         {
             Debug.Log("checkrunjumpmultiplier is run jumping in run air state" + isRunJumping);
-            player.Jumping(player.CurrentVelocity.y* playerData.variableRunJumpHeightMultiplier);
+            player.SetVelocityY(player.CurrentVelocity.y * playerData.variableRunJumpHeightMultiplier);
             isRunJumping = false;
         }
         else if(player.CurrentVelocity.y <= 0f)
@@ -97,5 +96,5 @@ public class PlayerRunJumpInAir : PlayerState
             isRunJumping = false;
         }
     }
-    public void SetIsRunJump() => isRunJumping = true;
+    public void SetIsRunJumping() => isRunJumping = true;
 }

@@ -54,7 +54,7 @@ public class PlayerMoveState : PlayerGroundedState
         }
         else
         {
-            Debug.Log("player airlineardrage from groundedstate");
+            Debug.Log("player airlineardrage from movestate");
             player.ApplyAirLinearDrag();
         }
     }

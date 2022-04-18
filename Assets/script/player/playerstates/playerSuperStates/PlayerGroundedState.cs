@@ -10,6 +10,8 @@ public class PlayerGroundedState : PlayerState
 
     private bool isGrounded;
 
+    private bool RunJumpInput;
+
     public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -25,6 +27,7 @@ public class PlayerGroundedState : PlayerState
     {
         base.Enter();
         player.JumpState.ResetAmountOfJumpsLeft();
+        player.RunJumpState.ResetAmountOfRunJumpsLeft();
     }
 
     public override void Exit()
@@ -37,7 +40,7 @@ public class PlayerGroundedState : PlayerState
         base.LogicUpdate();
         xInput = player.InputHandler.inputX;
         JumpInput = player.InputHandler.JumpInput;
-
+        RunJumpInput = player.InputHandler.RunJumpInput;
         if (JumpInput && player.JumpState.canJump())
         {
             player.InputHandler.UseJumpInput();
@@ -45,8 +48,26 @@ public class PlayerGroundedState : PlayerState
             Debug.Log("ongroundstate usejumpinput from playerinputhandler" +JumpInput);
         }else if (!isGrounded)
         {
+            Debug.Log("going to in air state");
             player.InAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.InAirState);
+        }else if (isGrounded)
+        {
+            player.ApplyGroundLinearDrag();
+        }
+        if(RunJumpInput && player.RunJumpState.canRunJump())
+        {
+            Debug.Log("going to run jump state");
+            player.InputHandler.UseRunJumpInput();
+            stateMachine.ChangeState(player.RunJumpState);
+        }else if (!isGrounded)
+        {
+            Debug.Log("going to run jump in air state");
+            player.RunJumpInAirState.StartCoyoteTime();
+            stateMachine.ChangeState(player.RunJumpInAirState);
+        }else if (isGrounded)
+        {
+            player.ApplyGroundLinearDrag();
         }
     }
 

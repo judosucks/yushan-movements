@@ -31,14 +31,6 @@ public class PlayerIdleState : PlayerGroundedState
         if(xInput != 0f)
         {
             stateMachine.ChangeState(player.MoveState);
-        }else if(xInput == 0f && player.CheckGrounded())
-        {
-            Debug.Log("applygroundlineardrag from idlestate");
-            player.ApplyGroundLinearDrag();
-        }else if(xInput == 0f && !player.CheckGrounded())
-        {
-            Debug.Log("applyairlineardrag from idlestate");
-            player.ApplyAirLinearDrag();
         }
     }
 

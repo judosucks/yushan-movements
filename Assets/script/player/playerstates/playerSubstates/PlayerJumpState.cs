@@ -7,19 +7,39 @@ public class PlayerJumpState : PlayerAbilityState
 
     private int amountOfJumpsLeft;
 
+    
+
     public PlayerJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
         amountOfJumpsLeft = playerData.amountOfJumps;
+        
     }
-
+    public override void DoChecks()
+    {
+        base.DoChecks();
+        
+    }
     public override void Enter()
     {
         base.Enter();
+       
         //player.SetVelocityY(playerData.jumpForce);
-        player.StraightJump();
-        isAbilityDone = true;
-        amountOfJumpsLeft--;
-        player.InAirState.SetIsJumping();
+       
+            Debug.Log("inpux is 0 straight jump");
+        player.SetVelocityY(playerData.straightJumpHeight);
+
+       isAbilityDone = true;
+            amountOfJumpsLeft--;
+            player.InAirState.SetIsJumping();
+       
+       
+        //else if(player.InputHandler.inputX != 0f)
+        //{
+        //    Debug.Log("changing to run jump state");
+        //    stateMachine.ChangeState(player.RunJumpState);
+        //}
+        
+        
     }
 
     public override void PhysicUpdate()
