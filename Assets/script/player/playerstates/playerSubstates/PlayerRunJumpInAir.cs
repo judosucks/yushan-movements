@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerRunJumpInAir : PlayerState
 {
-    private float xInput;
+    private int xInput;
+
+    private int yInput;
 
     private bool isGrounded;
 
@@ -44,14 +46,16 @@ public class PlayerRunJumpInAir : PlayerState
         base.LogicUpdate();
         CheckRunJumpMultiplier();
         CheckCoyoteTime();
-        xInput = player.InputHandler.inputX;
+        xInput = (int)player.InputHandler.inputX;
+        yInput = (int)player.InputHandler.inputY;
         runJumpInput = player.InputHandler.RunJumpInput;
         runJumpInputStop = player.InputHandler.RunJumpInputStop;
 
-        if(isGrounded && player.CurrentVelocity.y < 0.01f && xInput != 0)
+        if(isGrounded && Mathf.Sign(player.CurrentVelocity.y) == 0f && xInput != 0)
         {
-            Debug.Log("isgrounded going to runjumplandstate");
+            Debug.Log("isgrounded going to runjumplandstate"+Mathf.Sign(player.CurrentVelocity.y));
             stateMachine.ChangeState(player.RunJumpLandState);
+            Debug.Log("change state run jump state is excuted");
         }else if(runJumpInput && canRunJump)
         {
             Debug.Log("going to run jump state from in air state");
@@ -62,7 +66,7 @@ public class PlayerRunJumpInAir : PlayerState
             player.MoveCharacter();
             player.Anim.SetFloat("y", player.CurrentVelocity.y);
             player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
-            Debug.Log("is not grounded");
+            Debug.Log("is not jump run grounded"+Mathf.Sign(player.CurrentVelocity.y)+"anim"+player.Anim);
         }
 
     }

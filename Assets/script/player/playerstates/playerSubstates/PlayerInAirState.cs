@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerInAirState : PlayerState
 {
-    private float xInput;
+    private int xInput;
+
+    private int yInput;
 
     private bool isGrounded;
 
@@ -17,6 +19,8 @@ public class PlayerInAirState : PlayerState
     private bool jumpInputStop;
 
     private bool canJump;
+
+    private bool isTouchingWall;
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -26,6 +30,7 @@ public class PlayerInAirState : PlayerState
         base.DoChecks();
 
         isGrounded = player.CheckGrounded();
+        isTouchingWall = player.CheckIfTouchingWall();
         canJump = player.JumpState.canJump();
         Debug.Log("docheck" + "isgrounded" + isGrounded);
     }
@@ -45,21 +50,27 @@ public class PlayerInAirState : PlayerState
         base.LogicUpdate();
         CheckJumpMultiplier();
         CheckCoyoteTime();
-        xInput = player.InputHandler.inputX;
+        xInput = (int)player.InputHandler.inputX;
+        yInput = (int)player.InputHandler.inputY;
         jumpInput = player.InputHandler.JumpInput;
         jumpInputStop = player.InputHandler.JumpInputStop;
 
         
 
         Debug.Log("isgrounded from inaire" + isGrounded+"xinput"+xInput);
-        if(isGrounded && player.CurrentVelocity.y < 0.01f && xInput == 0)
+        if(isGrounded && Mathf.Sign(player.CurrentVelocity.y) == 0f && xInput == 0)
         {
-            Debug.Log("isgrounded" + isGrounded+"inairstate currentvelocityy"+player.CurrentVelocity.y);
+            Debug.Log("isgrounded" + isGrounded+"inairstate currentvelocityy"+Mathf.Sign(player.CurrentVelocity.y));
             stateMachine.ChangeState(player.LandState);
+            Debug.Log("state change land state excuted from in air state");
         }else if (jumpInput && canJump)
         {
             Debug.Log("jumpinput canjump from in air state" + jumpInput + canJump);
             stateMachine.ChangeState(player.JumpState);
+        }else if(isTouchingWall && xInput == player.facingDirection)
+        {
+            Debug.Log("chaning to wall slide state"+ isTouchingWall+""+xInput+""+player.facingDirection);
+            stateMachine.ChangeState(player.WallSlideState);
         }
         else
         {
@@ -67,7 +78,7 @@ public class PlayerInAirState : PlayerState
             player.MoveCharacter();
             player.Anim.SetFloat("yVelocity", player.rb.velocity.y);
             player.Anim.SetFloat("xVelocity",Mathf.Abs( player.rb.velocity.x));
-            Debug.Log("isnot grounded"+player.rb.velocity.x+""+player.CurrentVelocity.y);
+            Debug.Log("is not jump run grounded" + Mathf.Sign(player.CurrentVelocity.y) + "anim" + player.Anim);
         }
     }
 

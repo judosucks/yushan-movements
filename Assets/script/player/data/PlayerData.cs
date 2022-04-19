@@ -60,10 +60,11 @@ public class PlayerData :ScriptableObject
     public float groundCheckRadius = 0.3f;
     public LayerMask whatIsGround;
     public float groundRayCastLength;
-
+    public float wallCheckDistance = 0.4f;
 
     [Header("run jump")]
     public int amountOfRunJumps = 1;
 
-    
+    [Header("wall slide state")]
+    public float wallSlideVelocity = 3f;
 }

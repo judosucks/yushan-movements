@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerGroundedState : PlayerState
 {
-    protected float xInput;
+    protected int xInput;
 
     private bool JumpInput;
 
@@ -38,7 +38,7 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        xInput = player.InputHandler.inputX;
+        xInput = (int)player.InputHandler.inputX;
         JumpInput = player.InputHandler.JumpInput;
         RunJumpInput = player.InputHandler.RunJumpInput;
         if (JumpInput && player.JumpState.canJump())
@@ -67,6 +67,8 @@ public class PlayerGroundedState : PlayerState
             stateMachine.ChangeState(player.RunJumpInAirState);
         }else if (isGrounded)
         {
+            Debug.Log("isgrounded applgroundlineardrag and set gravityscale"+player.rb.gravityScale);
+            player.SetGravityScale(playerData.gravityScale);
             player.ApplyGroundLinearDrag();
         }
     }

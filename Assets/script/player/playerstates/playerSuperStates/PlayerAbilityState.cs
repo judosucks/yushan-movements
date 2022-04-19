@@ -15,7 +15,7 @@ public class PlayerAbilityState : PlayerState
     public override void DoChecks()
     {
         base.DoChecks();
-        isGrounded = player.CheckIsGrounded();
+        isGrounded = player.CheckGrounded();
     }
 
     public override void Enter()
@@ -37,7 +37,7 @@ public class PlayerAbilityState : PlayerState
 
         if (isAbilityDone)
         {
-            if (isGrounded && player.rb.velocity.y < 0.01f)
+            if (isGrounded && Mathf.Sign(player.rb.velocity.y) <= 0f)
             {
                 Debug.Log("on ground"+isGrounded);
                 stateMachine.ChangeState(player.IdleState);
@@ -50,7 +50,7 @@ public class PlayerAbilityState : PlayerState
         }
         if (isAnilityRunJumpDone)
         {
-            if(isGrounded && player.rb.velocity.y < 0.01f)
+            if(isGrounded && Mathf.Sign(player.rb.velocity.y) <= 0f)
             {
                 Debug.Log("onground run jump");
                 stateMachine.ChangeState(player.IdleState);

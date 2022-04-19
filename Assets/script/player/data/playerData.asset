@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe44437d5dc840b99205ca955460511, type: 3}
   m_Name: playerData
   m_EditorClassIdentifier: 
-  gravityScale: 1.1
+  gravityScale: 3.26
   fallGravityMult: 0
   quickFallGravityMult: 0
   dragAmount: 3.61
@@ -44,5 +44,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  groundRayCastLength: 1
+  groundRayCastLength: 1.31
+  wallCheckDistance: 1.49
   amountOfRunJumps: 2
+  wallSlideVelocity: 3

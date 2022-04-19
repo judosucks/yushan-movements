@@ -16,7 +16,9 @@ public class Player : MonoBehaviour
     public PlayerRunJump RunJumpState { get; private set; }
     public PlayerRunJumpInAir RunJumpInAirState { get; private set; }
     public PlayerRunJumpLanding RunJumpLandState { get; private set; }
-
+    public PlayerWallClimbState WallClimbState { get; private set; }
+    public PlayerWallGrabState WallGrabState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
     [SerializeField]
     private PlayerData playerData;
     #endregion
@@ -46,8 +48,9 @@ public class Player : MonoBehaviour
     #region  check transofrms
     [SerializeField] private Transform groundCheck;
     #endregion
-
     private bool isGrounded;
+    private bool isTouchingWall;
+    
 
     private Vector2 workspace;
     #region OTHER VARIABLES
@@ -81,6 +84,12 @@ public class Player : MonoBehaviour
         RunJumpState = new PlayerRunJump(this, stateMachine, playerData, "runJumpInAir");
         RunJumpInAirState = new PlayerRunJumpInAir(this, stateMachine, playerData, "runJumpInAir");
         RunJumpLandState = new PlayerRunJumpLanding(this, stateMachine, playerData, "runJumpLand");
+        WallSlideState = new PlayerWallSlideState(this, stateMachine, playerData, "wallSlide");
+        WallClimbState = new PlayerWallClimbState(this, stateMachine, playerData, "wallClimb");
+        WallGrabState = new PlayerWallGrabState(this, stateMachine, playerData, "wallGrab");
+
+
+
         isGrounded = CheckGrounded();
         
     }
@@ -94,25 +103,23 @@ public class Player : MonoBehaviour
         facingDirection = 1;
         IsFacingRight = true;
 
-        SetGravityScale(playerData.gravityScale);
+       
 
         stateMachine.Initialize(IdleState);
     }
     private void Update()
     {
-        #region TIMERS
-        LastOnGroundTime -= Time.deltaTime;
-        LastPressedJumpTime -= Time.deltaTime;
-        #endregion
+        
   
       
         stateMachine.CurrentState.LogicUpdate();
        
-        OnDrawGizmos();
+        
     }
     private void FixedUpdate()
     {
         stateMachine.CurrentState.PhysicUpdate();
+        OnDrawGizmos();
     }
 
     #region MOVEMENT METHODS
@@ -210,7 +217,7 @@ public class Player : MonoBehaviour
        
         if (Mathf.Abs(rb.velocity.x)> playerData.moveMaxSpeed)
         {
-            Debug.Log("math.abs rb.v.x" +Mathf.Abs(rb.velocity.x));
+           
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerData.moveMaxSpeed, CurrentVelocity.y);
             
         }
@@ -355,40 +362,57 @@ public class Player : MonoBehaviour
     public void CheckDirectionToFace(bool isMovingRight)
     {
         if (isMovingRight != IsFacingRight)
-            Turn();
-    }
-    public bool CheckIsGrounded()
-    {
-        //ground check
-         if(Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround))
         {
-            isGrounded = true;
-            return true;
+            facingDirection = -1;
+            Turn();
         }
         else
         {
-            isGrounded = false;
-            return false;
+            facingDirection = 1;
         }
-        
-        
+            
     }
+    
     public bool CheckGrounded()
     {
+        bool isGrounded;
        isGrounded = Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
         if (isGrounded)
         {
+            Debug.Log("isgrounded from plaher checkisground");
             return true;
         }
         else
         {
+            Debug.Log("isnotgrounded from plahyer checkground");
             return false;
         }
+    }
+    public bool CheckIfTouchingWall()
+    {
+        bool isTouchingWall;
+        isTouchingWall = Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+        if (isTouchingWall)
+        {
+            Debug.Log("istouchingwall from player checkiftouchingwall"+facingDirection);
+            return true;
+        }
+        else
+        {
+            Debug.Log("is not touching wall from player check if touching wall" + facingDirection);
+            return false;
+        }
+        
     }
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
+        //raycast line for ground check
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * playerData.groundRayCastLength);
+
+        //draw raycast line for wall check distance
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * facingDirection * playerData.wallCheckDistance);
+        Debug.Log(facingDirection + "ondrawgizmos");
     }
     #endregion
 }
