@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class PlayerRunJumpLanding : PlayerGroundedState
 {
+    
+
     public PlayerRunJumpLanding(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
-
+    public override void Enter()
+    {
+        base.Enter();
+        xInput = (int)player.InputHandler.inputX;
+    }
     public override void LogicUpdate()
     {
         base.LogicUpdate();

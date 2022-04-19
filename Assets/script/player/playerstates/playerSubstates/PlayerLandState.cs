@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class PlayerLandState : PlayerGroundedState
 {
-  
+
+    private int xInput;
 
     public PlayerLandState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
-
+    public override void Enter()
+    {
+        base.Enter();
+        xInput = (int)player.InputHandler.inputX;
+    }
     public override void LogicUpdate()
     {
         base.LogicUpdate();

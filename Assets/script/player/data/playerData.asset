@@ -30,21 +30,21 @@ MonoBehaviour:
   moveMaxSpeed: 17
   groundLinearDrag: 4.43
   airLinearDrag: 0.28
-  variableJumpHeightMultiplier: 1.23
-  variableJumpMoveMultiplier: 1.4
-  variableRunJumpHeightMultiplier: 1.48
-  jumpForce: 26.6
+  variableJumpHeightMultiplier: 1.35
+  variableJumpMoveMultiplier: 4.95
+  variableRunJumpHeightMultiplier: 2.54
+  jumpForce: 10.4
   jumpCutMultiplier: 0
   jumpBufferTime: 0
   amountOfJumps: 2
-  straightJumpHeight: 20.8
+  straightJumpHeight: 33.7
   doKeepRunMomentum: 1
   doTurnOnWallJump: 0
   groundCheckRadius: 1.43
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
-  groundRayCastLength: 1.31
-  wallCheckDistance: 1.49
+  groundRayCastLength: 1
+  wallCheckDistance: 2.67
   amountOfRunJumps: 2
   wallSlideVelocity: 3

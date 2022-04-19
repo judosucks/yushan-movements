@@ -78,15 +78,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
         if (context.canceled)
         {
-            if (player.CheckGrounded())
-            {
-                Debug.Log("not pressed move apple ground linear drag");
-                player.ApplyGroundLinearDrag();
-            }else if (!player.CheckGrounded())
-            {
-                Debug.Log("applyairlineardrag");
-                player.ApplyAirLinearDrag();
-            }
+            
             
         }
         

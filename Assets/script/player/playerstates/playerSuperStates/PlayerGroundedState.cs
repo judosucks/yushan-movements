@@ -51,9 +51,6 @@ public class PlayerGroundedState : PlayerState
             Debug.Log("going to in air state");
             player.InAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.InAirState);
-        }else if (isGrounded)
-        {
-            player.ApplyGroundLinearDrag();
         }
         if(RunJumpInput && player.RunJumpState.canRunJump())
         {
@@ -65,11 +62,6 @@ public class PlayerGroundedState : PlayerState
             Debug.Log("going to run jump in air state");
             player.RunJumpInAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.RunJumpInAirState);
-        }else if (isGrounded)
-        {
-            Debug.Log("isgrounded applgroundlineardrag and set gravityscale"+player.rb.gravityScale);
-            player.SetGravityScale(playerData.gravityScale);
-            player.ApplyGroundLinearDrag();
         }
     }
 

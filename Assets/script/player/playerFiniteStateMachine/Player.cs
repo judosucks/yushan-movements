@@ -48,8 +48,8 @@ public class Player : MonoBehaviour
     #region  check transofrms
     [SerializeField] private Transform groundCheck;
     #endregion
-    private bool isGrounded;
-    private bool isTouchingWall;
+    public bool isGrounded{get;private set;}
+    public bool isTouchingWall { get; private set; }
     
 
     private Vector2 workspace;
@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
 
 
 
-        isGrounded = CheckGrounded();
+        
         
     }
     private void Start()
@@ -102,16 +102,17 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         facingDirection = 1;
         IsFacingRight = true;
-
+        isGrounded = false;
+        isTouchingWall = false;
        
 
         stateMachine.Initialize(IdleState);
     }
     private void Update()
     {
-        
-  
-      
+
+
+        CurrentVelocity = rb.velocity;
         stateMachine.CurrentState.LogicUpdate();
        
         
@@ -221,10 +222,12 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerData.moveMaxSpeed, CurrentVelocity.y);
             
         }
-        if (InputHandler.inputX != 0 && isGrounded)
+        if (InputHandler.inputX != 0f && isGrounded)
         {
-            CheckDirectionToFace(InputHandler.inputX > 0);
+            Debug.Log("checkdirectiontoface");
+            CheckDirectionToFace(InputHandler.inputX > 0f);
         }
+        Debug.Log("isgrounded" + isGrounded);
     }
     public void Jumping()
     {
@@ -292,11 +295,16 @@ public class Player : MonoBehaviour
         rb.velocity = workspace;
         CurrentVelocity = workspace;
         Debug.Log("currentvelocityx");
+        if (InputHandler.inputX != 0f && isGrounded)
+        {
+            Debug.Log("isgrounded inputx" + isGrounded + "" + InputHandler.inputX);
+            CheckDirectionToFace(InputHandler.inputX > 0f);
+        }
 
     }
     public void SetVelocityY(float velocity)
     {
-        
+        ApplyAirLinearDrag();
         workspace.Set(rb.velocity.x, velocity);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
@@ -363,34 +371,37 @@ public class Player : MonoBehaviour
     {
         if (isMovingRight != IsFacingRight)
         {
-            facingDirection = -1;
+            
             Turn();
+            facingDirection = -1;
+            Debug.Log("turn" + facingDirection);
         }
         else
         {
             facingDirection = 1;
+            Debug.Log("facingdirection" + facingDirection);
         }
             
     }
     
     public bool CheckGrounded()
     {
-        bool isGrounded;
+      
        isGrounded = Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
         if (isGrounded)
         {
-            Debug.Log("isgrounded from plaher checkisground");
+            ApplyGroundLinearDrag();
             return true;
         }
         else
         {
-            Debug.Log("isnotgrounded from plahyer checkground");
+            
             return false;
         }
     }
     public bool CheckIfTouchingWall()
     {
-        bool isTouchingWall;
+      
         isTouchingWall = Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
         if (isTouchingWall)
         {
@@ -411,7 +422,7 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * playerData.groundRayCastLength);
 
         //draw raycast line for wall check distance
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * facingDirection * playerData.wallCheckDistance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right  * playerData.wallCheckDistance);
         Debug.Log(facingDirection + "ondrawgizmos");
     }
     #endregion

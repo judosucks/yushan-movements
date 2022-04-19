@@ -27,7 +27,7 @@ public class PlayerRunJump : PlayerAbilityState
             Debug.Log("excuting from run jump state");
         player.SetVelocityY(playerData.jumpForce);
 
-       isAnilityRunJumpDone = true;
+       isAbilityRunJumpDone = true;
             amountOfRunJumpsLeft--;
             player.RunJumpInAirState.SetIsRunJumping();
             //}else if(player.InputHandler.inputX == 0f)

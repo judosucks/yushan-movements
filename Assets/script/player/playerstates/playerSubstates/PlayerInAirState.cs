@@ -58,15 +58,19 @@ public class PlayerInAirState : PlayerState
         
 
         Debug.Log("isgrounded from inaire" + isGrounded+"xinput"+xInput);
-        if(isGrounded && Mathf.Sign(player.CurrentVelocity.y) == 0f && xInput == 0)
+        if(isGrounded && player.CurrentVelocity.y < 0.01f)
         {
             Debug.Log("isgrounded" + isGrounded+"inairstate currentvelocityy"+Mathf.Sign(player.CurrentVelocity.y));
+
             stateMachine.ChangeState(player.LandState);
+
             Debug.Log("state change land state excuted from in air state");
         }else if (jumpInput && canJump)
         {
             Debug.Log("jumpinput canjump from in air state" + jumpInput + canJump);
+
             stateMachine.ChangeState(player.JumpState);
+
         }else if(isTouchingWall && xInput == player.facingDirection)
         {
             Debug.Log("chaning to wall slide state"+ isTouchingWall+""+xInput+""+player.facingDirection);
