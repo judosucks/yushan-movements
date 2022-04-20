@@ -18,7 +18,7 @@ MonoBehaviour:
   coyoteTime: 0.5
   runMaxSpeed: 20.39
   runAccel: 9.4
-  runDeccel: 0.04
+  runDeccel: 4.63
   accelInAir: 0.36
   deccelInAir: 0.15
   accelPower: 1.41
@@ -26,21 +26,21 @@ MonoBehaviour:
   turnPower: 0.5
   movementAcceleration: 17
   moveMaxSpeed: 17
-  setVelocityXSpeed: 10.7
-  variableJumpHeightMultiplier: 15.1
-  variableRunJumpHeightMultiplier: 16.7
-  inAirMovementForce: 9.2
-  runJumpForce: 44.6
+  setVelocityXSpeed: 18.5
+  variableJumpHeightMultiplier: 1.35
+  variableRunJumpHeightMultiplier: 1.03
+  inAirMovementForce: 6.3
+  runJumpForce: 42.4
   amountOfJumps: 2
-  straightJumpHeight: 15.6
+  straightJumpHeight: 35.4
   groundCheckRadius: 1.43
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
   groundRayCastLength: 1
-  wallCheckDistance: 15.9
+  wallCheckDistance: 2
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 64
   amountOfRunJumps: 2
   wallSlideVelocity: 3

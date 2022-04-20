@@ -27,9 +27,10 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.LogicUpdate();
 
+        player.MoveCharacter();
 
-
-        player.SetVelocityX(playerData.movementAcceleration * xInput);
+        //player.MoveCharacter(playerData.movementAcceleration * xInput);
+        //player.SetVelocityX(playerData.movementAcceleration * xInput);
         Debug.Log(player.InputHandler.normalInputX+"normalx+inputx"+player.InputHandler.inputX);
         if(xInput == 0f)
         {

@@ -25,9 +25,11 @@ public class PlayerRunJump : PlayerAbilityState
 
 
         player.InputHandler.UseRunJumpInput();
+        //player.RunJumping(playerData.runJumpForce);
+
         player.SetVelocityY(playerData.runJumpForce);
 
-       isAbilityRunJumpDone = true;
+        isAbilityRunJumpDone = true;
             amountOfRunJumpsLeft--;
             player.RunJumpInAirState.SetIsRunJumping();
             //}else if(player.InputHandler.inputX == 0f)

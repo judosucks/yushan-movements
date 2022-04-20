@@ -20,8 +20,8 @@ public class PlayerData :ScriptableObject
 
     //GROUND
     [Header("Move State")]
-    
 
+    
     public float runMaxSpeed;
     public float runAccel;
     public float runDeccel;

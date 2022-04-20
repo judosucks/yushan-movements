@@ -61,7 +61,7 @@ public class PlayerRunJumpInAir : PlayerState
         CheckRunJumpMultiplier();
         if (isGrounded && player.CurrentVelocity.y <0.01f )
         {
-            
+            Debug.Log("isgrounded" + stateMachine.CurrentState);
             stateMachine.ChangeState(player.RunJumpLandState);
             
         }else if(runJumpInput && canRunJump)
@@ -113,6 +113,7 @@ public class PlayerRunJumpInAir : PlayerState
             if (RunJumpInputStop)
             {
                 Debug.Log("checkrunjumpmultiplier is run jumping in run air state" + isRunJumping + "second jump");
+                //player.RunJumping(player.CurrentVelocity.y * playerData.variableRunJumpHeightMultiplier);
                 player.SetVelocityY(player.CurrentVelocity.y * playerData.variableRunJumpHeightMultiplier);
                 isRunJumping = false;
             }

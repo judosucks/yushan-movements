@@ -307,6 +307,8 @@ public class Player : MonoBehaviour
 
         }else if(CheckGrounded()&& stateMachine.CurrentState == LandState || stateMachine.CurrentState == RunJumpLandState)
         {
+
+            Debug.Log("else if" + CurrentVelocity+stateMachine.CurrentState);
             CurrentVelocity = land;
             
         }
@@ -393,14 +395,23 @@ public class Player : MonoBehaviour
     
     public bool CheckGrounded()
     {
-      
-       return Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector3.down, playerData.groundRayCastLength, playerData.whatIsGround);
+      RaycastHit2D hit2d = Physics2D.Raycast(transform.position, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
+        if(hit2d.collider != null)
+        {
+            Debug.Log(hit2d.collider.name);
+            return true;
+        }
+        else
+        {
+           
+            return false;
+        }
       
     }
     public bool CheckIfTouchingWall()
     {
 
-        return Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+        return Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, playerData.wallCheckDistance,playerData.whatIsGround);
 
         //return Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector3.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsWall);
        
