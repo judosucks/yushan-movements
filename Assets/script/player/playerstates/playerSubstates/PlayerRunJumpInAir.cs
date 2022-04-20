@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerRunJumpInAir : PlayerState
 {
-    private int xInput;
+    private float xInput;
 
-    private int yInput;
+    private float yInput;
 
     private bool isGrounded;
 
@@ -14,15 +14,15 @@ public class PlayerRunJumpInAir : PlayerState
 
     private bool coyoteTime;
 
-    public bool isRunJumping { get; private set; }
+    private bool isRunJumping;
 
-    public bool RunJumpInputStop { get; private set; }
+    private bool RunJumpInputStop;
 
     private bool canRunJump;
 
     private bool isTouchingWall;
 
-    public bool isRunJumpState { get; private set; }
+    private int normalInputX;
 
     public PlayerRunJumpInAir(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -39,7 +39,7 @@ public class PlayerRunJumpInAir : PlayerState
     public override void Enter()
     {
         base.Enter();
-        isRunJumpState = true;
+      
     }
 
     public override void Exit()
@@ -51,37 +51,39 @@ public class PlayerRunJumpInAir : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        CheckRunJumpMultiplier();
+        
         CheckCoyoteTime();
-        xInput = (int)player.InputHandler.inputX;
-        yInput = (int)player.InputHandler.inputY;
+        xInput = player.InputHandler.inputX;
+        yInput = player.InputHandler.inputY;
+        normalInputX = player.InputHandler.normalInputX;
         runJumpInput = player.InputHandler.RunJumpInput;
         RunJumpInputStop = player.InputHandler.RunJumpInputStop;
-
-        if(isGrounded && player.CurrentVelocity.y <0.01f && isRunJumpState)
+        CheckRunJumpMultiplier();
+        if (isGrounded && player.CurrentVelocity.y <0.01f )
         {
-            isRunJumpState = false;
+            
             stateMachine.ChangeState(player.RunJumpLandState);
-            Debug.Log("change state run jump state is excuted" + isRunJumpState);
+            
         }else if(runJumpInput && canRunJump)
         {
-            isRunJumpState = false;
+            
             Debug.Log("going to run jump state from in air state");
             stateMachine.ChangeState(player.RunJumpState);
         }
-        else if (isTouchingWall && xInput == player.facingDirection && isRunJumpState)
+        else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
         {
-            isRunJumpState = false;
+            
             Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection);
             stateMachine.ChangeState(player.WallSlideState);
         }
         else
         {
-            isRunJumpState = false;
-            player.MoveCharacter();
+
+            player.SetVelocityX(playerData.inAirMovementForce * xInput);
             player.Anim.SetFloat("y", player.CurrentVelocity.y);
             player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
-            Debug.Log("is not jump run grounded" + player.CurrentVelocity.y+"isrunjumpstate"+isRunJumpState);
+            Debug.Log("is not jump run grounded" + xInput+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
+           
         }
 
     }
@@ -104,20 +106,27 @@ public class PlayerRunJumpInAir : PlayerState
 
     private void CheckRunJumpMultiplier()
     {
+
+        Debug.Log("checkrunjumpmultiplier");
         if (isRunJumping)
         {
-            Debug.Log("checkrunjumpmultiplier is run jumping in run air state" + isRunJumping);
-            player.SetVelocityY(player.CurrentVelocity.y * playerData.variableRunJumpHeightMultiplier);
-            isRunJumping = false;
-        }
-        else if(player.CurrentVelocity.y <= 0f)
-        {
-            isRunJumping = false;
+            if (RunJumpInputStop)
+            {
+                Debug.Log("checkrunjumpmultiplier is run jumping in run air state" + isRunJumping + "second jump");
+                player.SetVelocityY(player.CurrentVelocity.y * playerData.variableRunJumpHeightMultiplier);
+                isRunJumping = false;
+            }
+
+
+            else if (player.CurrentVelocity.y <= 0f)
+            {
+                isRunJumping = false;
+            }
         }
     }
     public void SetIsRunJumping()
     {
         isRunJumping = true;
-        Debug.Log("isrunjumping from runjumpinaire setisrunjumping" + isRunJumping);
+        Debug.Log("isrunjumping from runjumpinaire setisrunjumping" + isRunJumping+stateMachine.CurrentState);
     }
 }

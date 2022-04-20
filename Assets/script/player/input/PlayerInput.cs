@@ -61,7 +61,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""fd830cad-f1ec-4fdc-a176-35a3edd15147"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -124,6 +124,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""20b0bba8-b14d-4a70-9e86-80677030f481"",
+                    ""path"": ""<DualShockGamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""50367f8a-848f-4c9a-96e1-f7db3f683764"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -146,6 +157,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""9ce32b93-85d6-4c03-9c41-b94cf03e1f74"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""99a8cfd4-a35d-4807-a2b1-2dc08de57815"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -160,6 +182,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""6a21133f-29e2-4c98-aeb6-6a93e5a0d876"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""RunJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc2fbd38-ec6c-4b9d-9803-829866da1818"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""RunJump"",

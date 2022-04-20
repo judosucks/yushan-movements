@@ -26,9 +26,11 @@ public class PlayerJumpState : PlayerAbilityState
         //player.SetVelocityY(playerData.jumpForce);
        
             Debug.Log("inpux is 0 straight jump");
-        player.SetVelocityY(playerData.straightJumpHeight);
 
-       isAbilityDone = true;
+        player.InputHandler.UseJumpInput();
+        player.SetVelocityY(playerData.straightJumpHeight);
+       
+            isAbilityDone = true;
             amountOfJumpsLeft--;
             player.InAirState.SetIsJumping();
        
@@ -42,13 +44,7 @@ public class PlayerJumpState : PlayerAbilityState
         
     }
 
-    public override void PhysicUpdate()
-    {
-        base.PhysicUpdate();
-        //player.Drag(playerData.dragAmount);
-        //player.Run(1);
-        //Debug.Log("drag from jumpstate");
-    }
+    
     public bool canJump()
     {
         if(amountOfJumpsLeft > 0)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerGroundedState : PlayerState
 {
-    protected int xInput;
+    protected float xInput;
 
     private bool JumpInput;
 
@@ -38,7 +38,7 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        xInput = (int)player.InputHandler.inputX;
+        xInput = player.InputHandler.inputX;
         JumpInput = player.InputHandler.JumpInput;
         RunJumpInput = player.InputHandler.RunJumpInput;
         if (JumpInput && player.JumpState.canJump())

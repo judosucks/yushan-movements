@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerInAirState : PlayerState
 {
-    private int xInput;
+    private float xInput;
 
-    private int yInput;
+    private float yInput;
 
     private bool isGrounded;
 
@@ -21,6 +21,9 @@ public class PlayerInAirState : PlayerState
     private bool canJump;
 
     private bool isTouchingWall;
+
+    private int normalInputX;
+
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -48,41 +51,43 @@ public class PlayerInAirState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        CheckJumpMultiplier();
+
         CheckCoyoteTime();
-        xInput = (int)player.InputHandler.inputX;
-        yInput = (int)player.InputHandler.inputY;
+        xInput = player.InputHandler.inputX;
+        yInput = player.InputHandler.inputY;
+        normalInputX = player.InputHandler.normalInputX;
         jumpInput = player.InputHandler.JumpInput;
         jumpInputStop = player.InputHandler.JumpInputStop;
 
-        
+        CheckJumpMultiplier();
 
-        Debug.Log("isgrounded from inaire" + isGrounded+"xinput"+xInput);
-        if(isGrounded && player.CurrentVelocity.y < 0.01f)
+        Debug.Log("isgrounded from inaire" + isGrounded + "xinput" + xInput+"normal"+normalInputX);
+        if (isGrounded && player.CurrentVelocity.y < 0.01f)
         {
-            Debug.Log("isgrounded" + isGrounded+"inairstate currentvelocityy"+Mathf.Sign(player.CurrentVelocity.y));
+            Debug.Log("isgrounded" + isGrounded + "inairstate currentvelocityy" + player.CurrentVelocity.y);
 
             stateMachine.ChangeState(player.LandState);
 
             Debug.Log("state change land state excuted from in air state");
-        }else if (jumpInput && canJump)
+        } else if (jumpInput && canJump)
         {
             Debug.Log("jumpinput canjump from in air state" + jumpInput + canJump);
 
             stateMachine.ChangeState(player.JumpState);
 
-        }else if(isTouchingWall && xInput == player.facingDirection)
+        } else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
         {
-            Debug.Log("chaning to wall slide state"+ isTouchingWall+""+xInput+""+player.facingDirection);
+            Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection+"normalx"+normalInputX);
             stateMachine.ChangeState(player.WallSlideState);
         }
         else
         {
 
-            player.MoveCharacter();
+            player.SetVelocityX(playerData.inAirMovementForce * xInput);
             player.Anim.SetFloat("yVelocity", player.rb.velocity.y);
-            player.Anim.SetFloat("xVelocity",Mathf.Abs( player.rb.velocity.x));
-            Debug.Log("is not jump run grounded" + Mathf.Sign(player.CurrentVelocity.y) + "anim" + player.Anim);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.rb.velocity.x));
+
+            Debug.Log("is not jump run grounded" + player.CurrentVelocity.y + stateMachine.CurrentState);
         }
     }
 
@@ -92,7 +97,7 @@ public class PlayerInAirState : PlayerState
     }
     private void CheckCoyoteTime()
     {
-        if(coyoteTime && Time.time > startTime + playerData.coyoteTime)
+        if (coyoteTime && Time.time > startTime + playerData.coyoteTime)
         {
             Debug.Log("cototetime" + playerData.coyoteTime);
             coyoteTime = false;
@@ -103,13 +108,15 @@ public class PlayerInAirState : PlayerState
 
     private void CheckJumpMultiplier()
     {
+        Debug.Log("checkjumpmultiplier is excuted");
         if (isJumping)
         {
-            Debug.Log("checkjumpmultiplier isjumping from inairstate"+ isJumping);
+            Debug.Log("isjumping" + isJumping);
             if (jumpInputStop)
             {
-                Debug.Log("jumpinputstop from in air state" + jumpInputStop);
+                Debug.Log("jumpinputstop");
                 player.SetVelocityY(player.CurrentVelocity.y * playerData.variableJumpHeightMultiplier);
+                Debug.Log("jumpinputstop from in air state" + jumpInputStop + "second jump");
                 isJumping = false;
             }
             else if (player.CurrentVelocity.y <= 0f)
@@ -118,6 +125,11 @@ public class PlayerInAirState : PlayerState
             }
         }
     }
-    public void SetIsJumping() => isJumping = true;
+    public void SetIsJumping()
+    {
+        Debug.Log("setisjumping" + stateMachine.CurrentState);
+        isJumping = true;
+
+     }
     
 }

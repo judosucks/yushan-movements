@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: playerData
   m_EditorClassIdentifier: 
   gravityScale: 3.26
-  fallGravityMult: 0
-  quickFallGravityMult: 0
   dragAmount: 3.61
   frictionAmount: 0.3
   coyoteTime: 0.5
@@ -26,25 +24,23 @@ MonoBehaviour:
   accelPower: 1.41
   stopPower: 0.5
   turnPower: 0.5
-  movementAcceleration: 17.65
+  movementAcceleration: 17
   moveMaxSpeed: 17
-  groundLinearDrag: 4.43
-  airLinearDrag: 0.28
-  variableJumpHeightMultiplier: 1.35
-  variableJumpMoveMultiplier: 4.95
-  variableRunJumpHeightMultiplier: 2.54
-  jumpForce: 10.4
-  jumpCutMultiplier: 0
-  jumpBufferTime: 0
+  setVelocityXSpeed: 10.7
+  variableJumpHeightMultiplier: 15.1
+  variableRunJumpHeightMultiplier: 16.7
+  inAirMovementForce: 9.2
+  runJumpForce: 44.6
   amountOfJumps: 2
-  straightJumpHeight: 33.7
-  doKeepRunMomentum: 1
-  doTurnOnWallJump: 0
+  straightJumpHeight: 15.6
   groundCheckRadius: 1.43
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
   groundRayCastLength: 1
-  wallCheckDistance: 2.67
+  wallCheckDistance: 15.9
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 576
   amountOfRunJumps: 2
   wallSlideVelocity: 3

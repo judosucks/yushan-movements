@@ -47,10 +47,11 @@ public class Player : MonoBehaviour
     #endregion
     #region  check transofrms
     [SerializeField] private Transform groundCheck;
+
+    [SerializeField] private Transform wallCheck;
+
     #endregion
-    public bool isGrounded{get;private set;}
-    public bool isTouchingWall { get; private set; }
-    
+  
 
     private Vector2 workspace;
     #region OTHER VARIABLES
@@ -102,10 +103,9 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         facingDirection = 1;
         IsFacingRight = true;
-        isGrounded = false;
-        isTouchingWall = false;
-       
+     
 
+        SetGravityScale(playerData.gravityScale);
         stateMachine.Initialize(IdleState);
     }
     private void Update()
@@ -130,79 +130,79 @@ public class Player : MonoBehaviour
       
         rb.gravityScale = scale;
     }
-    public void Drag(float amount)
-    {
+    //public void Drag(float amount)
+    //{
         
-        Vector2 force = amount * rb.velocity.normalized;
-        force.x = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(force.x));//ensure we only slow the player down, if the player is going really slowly we just apply a force stopping them 確定玩家的速度只會慢下來 當玩家速度真的很慢的時候 執行一個動力強迫玩家停下
+    //    Vector2 force = amount * rb.velocity.normalized;
+    //    force.x = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(force.x));//ensure we only slow the player down, if the player is going really slowly we just apply a force stopping them 確定玩家的速度只會慢下來 當玩家速度真的很慢的時候 執行一個動力強迫玩家停下
                                                                           
-        force.y = Mathf.Min(Mathf.Abs(rb.velocity.y), Mathf.Abs(force.y));
-        force.x *= Mathf.Sign(rb.velocity.x);//finds direction to apply force 在x軌道找出執行動力的方向
-        force.y *= Mathf.Sign(rb.velocity.y);
+    //    force.y = Mathf.Min(Mathf.Abs(rb.velocity.y), Mathf.Abs(force.y));
+    //    force.x *= Mathf.Sign(rb.velocity.x);//finds direction to apply force 在x軌道找出執行動力的方向
+    //    force.y *= Mathf.Sign(rb.velocity.y);
         
-        rb.AddForce(-force, ForceMode2D.Impulse);
-        Debug.Log("drag" + -force);
-    }
-    public void Run(float lerpAmount)
-    {
-        Debug.Log("run");
-        CalculateSpeed();
-        float targetSpeed = InputHandler.inputX * playerData.runMaxSpeed;//calculate the direction we want to move in our desire velocity 計算預計行動的方向速度
-        float speedDif = targetSpeed - rb.velocity.x;//calculate differece between current velocity and desire velocity 計算當前速度跟預計的速度
+    //    rb.AddForce(-force, ForceMode2D.Impulse);
+    //    Debug.Log("drag" + -force);
+    //}
+    //public void Run(float lerpAmount)
+    //{
+    //    Debug.Log("run");
+    //    CalculateSpeed();
+    //    float targetSpeed = InputHandler.inputX * playerData.runMaxSpeed;//calculate the direction we want to move in our desire velocity 計算預計行動的方向速度
+    //    float speedDif = targetSpeed - rb.velocity.x;//calculate differece between current velocity and desire velocity 計算當前速度跟預計的速度
        
-        #region Acceleration Rate
-        //float accelRate;
-        //accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
-        //gets an accleration value based of if we are accelerating (includes turning) or trying to stop (decelerating).as well as applying a mutiplier if we are in air borne 加速跟減速 當玩家在空中時執行乘法落下(加速)
-        //if(LastOnGroundTime > 0)
-        //{
-        //    Debug.Log("lastongroundtime");
-        //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
-        //}
-        //else
-        //{
+    //    #region Acceleration Rate
+    //    //float accelRate;
+    //    //accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
+    //    //gets an accleration value based of if we are accelerating (includes turning) or trying to stop (decelerating).as well as applying a mutiplier if we are in air borne 加速跟減速 當玩家在空中時執行乘法落下(加速)
+    //    //if(LastOnGroundTime > 0)
+    //    //{
+    //    //    Debug.Log("lastongroundtime");
+    //    //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
+    //    //}
+    //    //else
+    //    //{
 
-        //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel * playerData.accelInAir : playerData.runDeccel * playerData.deccelInAir;
-        //    Debug.Log("else lastongroundtime>0" + accelRate);
-        //}
-        //if we want to run but are already going faster than max run speed 假如玩家已經超出最高限速
-        //if (((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
-        //{
-        //    Debug.Log("prevent any deceleration");
-        //    accelRate = 0; // prevent any deceleration from happening, or in other words conserve are current momentum 預防減速發生 動力定律
-        //}
-        #endregion
-        #region Velocity Power
-        float velPower;
-        if (Mathf.Abs(targetSpeed) < 0.01f)
-        {
+    //    //    accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel * playerData.accelInAir : playerData.runDeccel * playerData.deccelInAir;
+    //    //    Debug.Log("else lastongroundtime>0" + accelRate);
+    //    //}
+    //    //if we want to run but are already going faster than max run speed 假如玩家已經超出最高限速
+    //    //if (((rb.velocity.x > targetSpeed && targetSpeed > 0.01f)||(rb.velocity.x < targetSpeed && targetSpeed < -0.01f))&& playerData.doKeepRunMomentum)
+    //    //{
+    //    //    Debug.Log("prevent any deceleration");
+    //    //    accelRate = 0; // prevent any deceleration from happening, or in other words conserve are current momentum 預防減速發生 動力定律
+    //    //}
+    //    #endregion
+    //    #region Velocity Power
+    //    float velPower;
+    //    if (Mathf.Abs(targetSpeed) < 0.01f)
+    //    {
 
-            velPower = playerData.stopPower;
-        }
-        else if (Mathf.Abs(rb.velocity.x) > 0 && (Mathf.Sign(targetSpeed) != Mathf.Sign(rb.velocity.x)))
-        {
-            velPower = playerData.turnPower;
-        }
-        else
-        {
+    //        velPower = playerData.stopPower;
+    //    }
+    //    else if (Mathf.Abs(rb.velocity.x) > 0 && (Mathf.Sign(targetSpeed) != Mathf.Sign(rb.velocity.x)))
+    //    {
+    //        velPower = playerData.turnPower;
+    //    }
+    //    else
+    //    {
            
-            velPower = playerData.accelPower;
-        }
-        #endregion
-        //applies accleration to speed difference, then is raised to a set power so the acceleration increased with higher speeds,finally multiplies by sign to preserve direction 執行當前速度與預計速度差別 設置力量來增加更快的速度 最後乘以Mathf.Sign維持方向
+    //        velPower = playerData.accelPower;
+    //    }
+    //    #endregion
+    //    //applies accleration to speed difference, then is raised to a set power so the acceleration increased with higher speeds,finally multiplies by sign to preserve direction 執行當前速度與預計速度差別 設置力量來增加更快的速度 最後乘以Mathf.Sign維持方向
 
 
 
-        float movement = Mathf.Pow(Mathf.Abs(speedDif), velPower) * Mathf.Sign(speedDif);
-        movement = Mathf.Lerp(rb.velocity.x, movement, lerpAmount);
+    //    float movement = Mathf.Pow(Mathf.Abs(speedDif), velPower) * Mathf.Sign(speedDif);
+    //    movement = Mathf.Lerp(rb.velocity.x, movement, lerpAmount);
       
-        rb.AddForce(movement * Vector2.right); //applies force force to rigibody,multiplying by vector2.right so that it only affects X axis 執行動力來強迫rigibody乘以Vector2.right 將他只在x軌道發生作用
+    //    rb.AddForce(movement * Vector2.right); //applies force force to rigibody,multiplying by vector2.right so that it only affects X axis 執行動力來強迫rigibody乘以Vector2.right 將他只在x軌道發生作用
         
-        if(InputHandler.inputX != 0)
-        {
-            CheckDirectionToFace(InputHandler.inputX > 0);
-        }
-    }
+    //    if(InputHandler.inputX != 0)
+    //    {
+    //        CheckDirectionToFace(InputHandler.inputX > 0);
+    //    }
+    //}
    
     public void MoveCharacter()
     {
@@ -222,24 +222,25 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerData.moveMaxSpeed, CurrentVelocity.y);
             
         }
-        if (InputHandler.inputX != 0f && isGrounded)
+        if (InputHandler.inputX != 0f && CheckGrounded())
         {
             Debug.Log("checkdirectiontoface");
             CheckDirectionToFace(InputHandler.inputX > 0f);
+            
         }
-        Debug.Log("isgrounded" + isGrounded);
+        Debug.Log("isgrounded" + CheckGrounded());
     }
-    public void Jumping()
-    {
-        float force = playerData.jumpForce;
-        rb.velocity = new Vector2(rb.velocity.x,Mathf.Abs(CurrentVelocity.y));
+    //public void Jumping()
+    //{
+    //    float force = playerData.jumpForce;
+    //    rb.velocity = new Vector2(rb.velocity.x,Mathf.Abs(CurrentVelocity.y));
       
-        rb.AddForce(Vector2.up * force, ForceMode2D.Force);
-        //rb.AddForce(new Vector2(rb.velocity.x,rb.velocity.y)*playerData.jumpForce);
-            Debug.Log("run jumping" + rb.velocity.y);
+    //    rb.AddForce(Vector2.up * force, ForceMode2D.Force);
+    //    //rb.AddForce(new Vector2(rb.velocity.x,rb.velocity.y)*playerData.jumpForce);
+    //        Debug.Log("run jumping" + rb.velocity.y);
         
         
-    }
+    //}
     public void StraightJump()
     {
         float absoluteZero = 0f;
@@ -271,67 +272,77 @@ public class Player : MonoBehaviour
         //rb.AddForce(new Vector2(absoluteZero, CurrentVelocity.y * playerData.straightJumpHeight), ForceMode2D.Impulse);
        
     }
-    public void ApplyGroundLinearDrag()
-    {
-        if(Mathf.Abs(InputHandler.inputX)< 0.4f || changeingDirection)
-        {
-            Debug.Log("apply ground linear drag");
-            rb.drag = playerData.groundLinearDrag;
-        }
-        else
-        {
-            
-            rb.drag = 0f;
-        }
-    }
-    public void ApplyAirLinearDrag()
-    {
-        Debug.Log("apply air linear drag");
-        rb.drag = playerData.airLinearDrag;
-    }
+   
+    //public void LinearDragToApply()
+    //{
+    //    if(Mathf.Abs(InputHandler.inputX)< 0.4f || changeingDirection && isGrounded)
+    //    {
+    //        Debug.Log("apply ground linear drag"+rb.velocity.x+"y"+rb.velocity.y+"currentstate"+stateMachine.CurrentState);
+    //        rb.drag = playerData.groundLinearDrag;
+    //    }
+    //    else if(!isGrounded && stateMachine.CurrentState == InAirState||stateMachine.CurrentState == RunJumpInAirState)
+    //    {
+    //        Debug.Log("not apply ground linear drag" + rb.velocity.x + "y" + rb.velocity.y+"currentsate"+stateMachine.CurrentState);
+    //        ApplyAirLinearDrag();
+    //    }
+    //}
+    //public void ApplyAirLinearDrag()
+    //{
+    //    Debug.Log("apply air linear drag"+rb.velocity.x+"y"+rb.velocity.y+"curr"+stateMachine.CurrentState);
+    //    rb.drag = playerData.airLinearDrag;
+    //}
     public void SetVelocityX(float velocity)
     {
+        //Animator animator = GetComponentInChildren<Animator>();
+        //AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         workspace.Set(velocity, rb.velocity.y);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
-        Debug.Log("currentvelocityx");
-        if (InputHandler.inputX != 0f && isGrounded)
+        Vector2 land = Vector2.zero;
+        Debug.Log("setvelocityx");
+        if (InputHandler.inputX != 0f && CheckGrounded())
         {
-            Debug.Log("isgrounded inputx" + isGrounded + "" + InputHandler.inputX);
+            Debug.Log("checkdirectiontoface");
             CheckDirectionToFace(InputHandler.inputX > 0f);
+
+        }else if(CheckGrounded()&& stateMachine.CurrentState == LandState || stateMachine.CurrentState == RunJumpLandState)
+        {
+            CurrentVelocity = land;
+            
         }
 
     }
+   
     public void SetVelocityY(float velocity)
     {
-        ApplyAirLinearDrag();
+        
         workspace.Set(rb.velocity.x, velocity);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
-        Debug.Log("setveloctyy"+CurrentVelocity.y+"cur rb"+rb.velocity.y);
+        Debug.Log("setveloctyy"+CurrentVelocity.x+"cur rb"+rb.velocity.y+stateMachine.CurrentState);
     }
-    public void Jump()
-    {
-        //ensures we can't call a jump multiple times from one press
-        LastOnGroundTime = 0;
-        LastPressedJumpTime = 0;
-        #region perform jump
-        float force = playerData.jumpForce;
+    //public void Jump()
+    //{
+    //    //ensures we can't call a jump multiple times from one press
+    //    LastOnGroundTime = 0;
+    //    LastPressedJumpTime = 0;
+    //    #region perform jump
+    //    float force = playerData.jumpForce;
 
-        if (rb.velocity.y < 0)
-        {
-            Debug.Log("if" + rb.velocity.y);
-            force -= rb.velocity.y;
-        }
-        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        #endregion
-    }
+    //    if (rb.velocity.y < 0)
+    //    {
+    //        Debug.Log("if" + rb.velocity.y);
+    //        force -= rb.velocity.y;
+    //    }
+    //    rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+    //    #endregion
+    //}
     private void Turn()
     {
         Vector3 scale = transform.localScale;//stores scale and flips x axis,"flipping" the entire gameObject around (could rotate the player instead)
         scale.x *= -1;
         transform.localScale = scale;
-
+        facingDirection *= -1;
         IsFacingRight = !IsFacingRight;
     }
     #endregion
@@ -373,51 +384,31 @@ public class Player : MonoBehaviour
         {
             
             Turn();
-            facingDirection = -1;
+            
             Debug.Log("turn" + facingDirection);
         }
-        else
-        {
-            facingDirection = 1;
-            Debug.Log("facingdirection" + facingDirection);
-        }
+      
             
     }
     
     public bool CheckGrounded()
     {
       
-       isGrounded = Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
-        if (isGrounded)
-        {
-            ApplyGroundLinearDrag();
-            return true;
-        }
-        else
-        {
-            
-            return false;
-        }
+       return Physics2D.Raycast(transform.position * playerData.groundRayCastLength, Vector3.down, playerData.groundRayCastLength, playerData.whatIsGround);
+      
     }
     public bool CheckIfTouchingWall()
     {
-      
-        isTouchingWall = Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
-        if (isTouchingWall)
-        {
-            Debug.Log("istouchingwall from player checkiftouchingwall"+facingDirection);
-            return true;
-        }
-        else
-        {
-            Debug.Log("is not touching wall from player check if touching wall" + facingDirection);
-            return false;
-        }
+
+        return Physics2D.Raycast(wallCheck.position, Vector2.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+
+        //return Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector3.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsWall);
+       
         
     }
     public void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.red;
         //raycast line for ground check
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * playerData.groundRayCastLength);
 

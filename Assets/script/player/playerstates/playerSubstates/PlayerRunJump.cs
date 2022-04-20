@@ -22,10 +22,10 @@ public class PlayerRunJump : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        
-      
-            Debug.Log("excuting from run jump state");
-        player.SetVelocityY(playerData.jumpForce);
+
+
+        player.InputHandler.UseRunJumpInput();
+        player.SetVelocityY(playerData.runJumpForce);
 
        isAbilityRunJumpDone = true;
             amountOfRunJumpsLeft--;
@@ -39,20 +39,7 @@ public class PlayerRunJump : PlayerAbilityState
        
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-    }
-
-    public override void PhysicUpdate()
-    {
-        base.PhysicUpdate();
-    }
+    
     public bool canRunJump()
     {
         if(amountOfRunJumpsLeft > 0)

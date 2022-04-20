@@ -23,6 +23,10 @@ public class PlayerInputHandler : MonoBehaviour
 
     public float inputY { get; private set; }
 
+    public int normalInputX { get; private set; }
+
+    public int normalInputY { get; private set; }
+
     public bool JumpInput { get; private set; }
 
     public bool JumpInputStop { get; private set; }
@@ -69,11 +73,14 @@ public class PlayerInputHandler : MonoBehaviour
     {
         RawMovementInput = context.ReadValue<Vector2>();
 
-        inputX = RawMovementInput.x;
-        inputY = RawMovementInput.y;
+        inputX = (RawMovementInput*Vector2.right).x;
+        inputY = (RawMovementInput*Vector2.up).y;
+        normalInputX = Mathf.RoundToInt(inputX);
+        normalInputY = Mathf.RoundToInt(inputY);
         if (context.started)
         {
             Debug.Log("pressed move");
+            Debug.Log(normalInputX);
 
         }
         if (context.canceled)

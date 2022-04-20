@@ -6,8 +6,8 @@ public class PlayerWallTouchingState : PlayerState
 {
     protected bool isGrounded;
     protected bool isTouchingWall;
-    protected int xInput;
-
+    protected float xInput;
+    protected int normalInputX;
 
     public PlayerWallTouchingState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -43,14 +43,14 @@ public class PlayerWallTouchingState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        xInput = (int)player.InputHandler.inputX;
-
+        xInput = player.InputHandler.inputX;
+        normalInputX = player.InputHandler.normalInputX;
         if (isGrounded)
         {
             Debug.Log("chanestate to idle state");
             stateMachine.ChangeState(player.IdleState);
         }
-        else if(!isTouchingWall || xInput != player.facingDirection)
+        else if(!isTouchingWall || normalInputX == player.facingDirection)
         {
             Debug.Log("change to in air state"+ xInput+""+player.facingDirection);
             stateMachine.ChangeState(player.InAirState);
