@@ -67,7 +67,8 @@ public class PlayerRunJumpInAir : PlayerState
             Debug.Log("isgrounded" + stateMachine.CurrentState);
             stateMachine.ChangeState(player.RunJumpLandState);
             
-        }else if(runJumpInput && isTouchingWall)
+        }
+        else if(runJumpInput && isTouchingWall)
         {
             Debug.Log("walljumpinput" + stateMachine.CurrentState);
             stateMachine.ChangeState(player.WallJumpState);
@@ -91,10 +92,10 @@ public class PlayerRunJumpInAir : PlayerState
         else
         {
 
-            player.SetVelocityX(playerData.movementAcceleration);
+            player.SetVelocityX(playerData.inAirMovementForce * xInput);
             player.Anim.SetFloat("y", player.CurrentVelocity.y);
             player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
-            Debug.Log("is not jump run grounded" + xInput+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
+            Debug.Log("is in air" + player.CurrentVelocity.x+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
            
         }
 

@@ -96,7 +96,7 @@ public class PlayerInAirState : PlayerState
         else
         {
 
-                     player.SetVelocityX(playerData.inAirMovementForce);
+                     player.SetVelocityX(playerData.inAirMovementForce * xInput);
             player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
             player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
 

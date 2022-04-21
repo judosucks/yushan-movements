@@ -34,12 +34,15 @@ public class PlayerWallGrabState : PlayerWallTouchingState
 
         if (!isExitingState)
         {
+            player.InputHandler.UseGrabInput();
+            Debug.Log("usejumpinput" + GrabInput);
             if (normalInputY > 0)
             {
                 Debug.Log("normalInpuy > 0" + stateMachine.CurrentState);
+               
                 stateMachine.ChangeState(player.WallClimbState);
             }
-            else if (normalInputY < 0 || GrabInput)
+            else if (normalInputY < 0 || !GrabInput)
             {
                 Debug.Log("else if < 0" + stateMachine.CurrentState);
                 stateMachine.ChangeState(player.WallSlideState);
@@ -51,7 +54,8 @@ public class PlayerWallGrabState : PlayerWallTouchingState
     {
         Debug.Log("holdposition");
         player.transform.position = holdPosition;
-        player.rb.velocity = Vector2.zero;
+        player.SetVelocityX(0f);
+        player.SetVelocityY(0f);
         
     }
     public override void PhysicUpdate()

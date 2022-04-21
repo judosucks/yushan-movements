@@ -37,12 +37,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool GrabInput { get; private set; }
 
-    public bool moveInput { get; private set; }
+    
 
     public Player player { get; private set; }
    
     [SerializeField]
     private float inputHoldTime = 0.2f;
+    [SerializeField]
+    private float runJumpInputHoldTime = 0.2f;
    
     private float jumpInputStartTime;
     private float dashInputStartTime;
@@ -84,8 +86,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (context.started)
         {
             Debug.Log("pressed move");
-            Debug.Log(normalInputX);
-            moveInput = true;
+           
+        
 
         }
         if (context.canceled)
@@ -93,14 +95,7 @@ public class PlayerInputHandler : MonoBehaviour
             
             
         }
-        if (player.CheckIfTouchingWall())
-        {
-            GrabInput = true;
-        }
-        else if (!player.CheckIfTouchingWall())
-        {
-            GrabInput = false;
-        }
+       
 
     }
    public void OnJumpInput(InputAction.CallbackContext context)
@@ -162,15 +157,16 @@ public class PlayerInputHandler : MonoBehaviour
         RunJumpInput = false;
         Debug.Log("userunjumpinput from inputhandler");
     }
-    public void UseMoveInput()
+    public void UseGrabInput()
     {
-        moveInput = false;
+        GrabInput = false;
     }
+    
     private void CheckRunJumpInputHoldTime()
     {
-        if(Time.time >= runJumpInputStartTime + inputHoldTime)
+        if(Time.time >= runJumpInputStartTime + runJumpInputHoldTime)
         {
-            float time = jumpInputStartTime + inputHoldTime;
+            float time = runJumpInputStartTime + runJumpInputHoldTime;
             Debug.Log("checkrunjumpinputholdtime"+time);
             RunJumpInput = false;
         }

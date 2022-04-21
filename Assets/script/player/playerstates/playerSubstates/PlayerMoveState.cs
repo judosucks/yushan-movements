@@ -28,15 +28,8 @@ public class PlayerMoveState : PlayerGroundedState
         base.LogicUpdate();
         if (!isExitingState)
         {
-            if (isTouchingWall && GrabInput)
-            {
-                Debug.Log("istouching grabinput from" + stateMachine.CurrentState); stateMachine.ChangeState(player.WallGrabState);
-            }
-            else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
-            {
-                Debug.Log("wallslide from" + stateMachine.CurrentState); stateMachine.ChangeState(player.WallSlideState);
-            }
-            else if (normalInputX == 0)
+           
+           if (normalInputX == 0)
             {
                 Debug.Log("idle");
                 stateMachine.ChangeState(player.IdleState);

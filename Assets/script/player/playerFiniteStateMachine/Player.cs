@@ -248,7 +248,7 @@ public class Player : MonoBehaviour
         float absoluteZero = 0f;
         float force = playerData.straightJumpHeight;
     
-        rb.velocity = new Vector2(absoluteZero, Mathf.Abs(CurrentVelocity.y));
+        rb.velocity = new Vector2(absoluteZero,CurrentVelocity.y);
         rb.AddForce(Vector2.up * force, ForceMode2D.Force);
         Debug.Log("excuted straightjump");
         //if(absoluteZero > 0 || absoluteZero < 0 || absoluteZero != 0f)
@@ -305,10 +305,10 @@ public class Player : MonoBehaviour
     {
         //Animator animator = GetComponentInChildren<Animator>();
         //AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        workspace.Set(InputHandler.inputX, rb.velocity.y);
+        workspace.Set(velocity, CurrentVelocity.y);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
-        rb.AddForce(new Vector2(CurrentVelocity.x, 0f) * velocity, ForceMode2D.Force);
+        
         Debug.Log("setvelocityx");
         if (CheckGrounded())
         {
@@ -320,7 +320,7 @@ public class Player : MonoBehaviour
     public void SetVelocityY(float velocity)
     {
         
-        workspace.Set(rb.velocity.x, velocity);
+        workspace.Set(CurrentVelocity.x, velocity);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
         Debug.Log("setveloctyy"+CurrentVelocity.x+"cur rb"+rb.velocity.y+stateMachine.CurrentState);

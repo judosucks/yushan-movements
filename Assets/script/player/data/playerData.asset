@@ -28,15 +28,15 @@ MonoBehaviour:
   accelPower: 1.41
   stopPower: 0.5
   turnPower: 0.5
-  movementAcceleration: 34.97
+  movementAcceleration: 19
   moveMaxSpeed: 17
-  setVelocityXSpeed: 25.21
-  variableJumpHeightMultiplier: 1.35
-  variableRunJumpHeightMultiplier: 6.81
-  inAirMovementForce: 21.5
-  runJumpForce: 42.4
+  setVelocityXSpeed: 20
+  variableJumpHeightMultiplier: 7.6
+  variableRunJumpHeightMultiplier: 1.6
+  inAirMovementForce: 19.8
+  runJumpForce: 31.72
   amountOfJumps: 2
-  straightJumpHeight: 35.4
+  straightJumpHeight: 35.6
   groundCheckRadius: 1.43
   whatIsGround:
     serializedVersion: 2
