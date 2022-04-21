@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerLandState : PlayerGroundedState
 {
 
-    private int xInput;
+    private int normalInputX;
 
     public PlayerLandState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -13,20 +13,26 @@ public class PlayerLandState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
-        xInput = (int)player.InputHandler.inputX;
+        normalInputX = player.InputHandler.normalInputX;
     }
     public override void LogicUpdate()
     {
         base.LogicUpdate();
         Debug.Log("landingstate");
-        if(xInput != 0)
+
+        if (!isExitingState)
         {
-            Debug.Log("xinput != 0 from playerlandstate");
-            stateMachine.ChangeState(player.MoveState);
-        }else if (isAnimationFinished)
-        {
-            Debug.Log("isanimationfinished" + isAnimationFinished+"landstate");
-            stateMachine.ChangeState(player.IdleState);
+            if (normalInputX != 0)
+            {
+                Debug.Log("xinput != 0 from playerlandstate");
+                stateMachine.ChangeState(player.MoveState);
+            }
+            else if (isAnimationFinished)
+            {
+                Debug.Log("isanimationfinished" + isAnimationFinished + "landstate");
+                stateMachine.ChangeState(player.IdleState);
+            }
         }
+        
     }
 }

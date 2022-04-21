@@ -6,11 +6,17 @@ public class PlayerGroundedState : PlayerState
 {
     protected float xInput;
 
-    private bool JumpInput;
+    protected bool JumpInput;
 
-    private bool isGrounded;
+    protected bool isGrounded;
 
-    private bool RunJumpInput;
+    protected bool RunJumpInput;
+
+    protected bool isTouchingWall;
+
+    protected bool GrabInput;
+
+    protected int normalInputX;
 
     public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -21,6 +27,7 @@ public class PlayerGroundedState : PlayerState
         base.DoChecks();
 
         isGrounded = player.CheckGrounded();
+        isTouchingWall = player.CheckIfTouchingWall();
     }
 
     public override void Enter()
@@ -38,9 +45,11 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        normalInputX = player.InputHandler.normalInputX;
         xInput = player.InputHandler.inputX;
         JumpInput = player.InputHandler.JumpInput;
         RunJumpInput = player.InputHandler.RunJumpInput;
+        GrabInput = player.InputHandler.GrabInput;
         if (JumpInput && player.JumpState.canJump())
         {
             player.InputHandler.UseJumpInput();
@@ -57,11 +66,15 @@ public class PlayerGroundedState : PlayerState
             Debug.Log("going to run jump state");
             player.InputHandler.UseRunJumpInput();
             stateMachine.ChangeState(player.RunJumpState);
-        }else if (!isGrounded)
+        }else if (!isGrounded && stateMachine.CurrentState == player.RunJumpInAirState || stateMachine.CurrentState == player.RunJumpState)
         {
             Debug.Log("going to run jump in air state");
             player.RunJumpInAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.RunJumpInAirState);
+        }else if(isTouchingWall && GrabInput)
+        {
+            Debug.Log("grab wall");
+            stateMachine.ChangeState(player.WallGrabState);
         }
     }
 

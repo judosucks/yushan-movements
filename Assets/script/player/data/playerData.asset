@@ -16,6 +16,10 @@ MonoBehaviour:
   dragAmount: 3.61
   frictionAmount: 0.3
   coyoteTime: 0.5
+  wallJumpVelocity: 20
+  wallJumpTime: 0.4
+  wallJumpAngle: {x: 1, y: 2}
+  wallClimbVelocity: 3
   runMaxSpeed: 20.39
   runAccel: 9.4
   runDeccel: 4.63
@@ -24,12 +28,12 @@ MonoBehaviour:
   accelPower: 1.41
   stopPower: 0.5
   turnPower: 0.5
-  movementAcceleration: 17
+  movementAcceleration: 34.97
   moveMaxSpeed: 17
-  setVelocityXSpeed: 18.5
+  setVelocityXSpeed: 25.21
   variableJumpHeightMultiplier: 1.35
-  variableRunJumpHeightMultiplier: 1.03
-  inAirMovementForce: 6.3
+  variableRunJumpHeightMultiplier: 6.81
+  inAirMovementForce: 21.5
   runJumpForce: 42.4
   amountOfJumps: 2
   straightJumpHeight: 35.4
@@ -43,4 +47,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   amountOfRunJumps: 2
-  wallSlideVelocity: 3
+  wallSlideVelocity: 13.92

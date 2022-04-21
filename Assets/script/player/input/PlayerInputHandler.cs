@@ -35,6 +35,10 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool RunJumpInput { get; private set; }
 
+    public bool GrabInput { get; private set; }
+
+    public bool moveInput { get; private set; }
+
     public Player player { get; private set; }
    
     [SerializeField]
@@ -57,13 +61,13 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void Update()
     {
-        if(inputX == 0f)
+        if(normalInputX == 0f)
         {
-            Debug.Log("straight jump inpux == 0");
+            Debug.Log("checkjumpinputholdtime");
             CheckJumpInputHoldTime();
-        }else if(inputX != 0f)
+        }else if(normalInputX != 0f)
         {
-            Debug.Log("runjump");
+            Debug.Log("checkrunjumpinputholdtime");
             CheckRunJumpInputHoldTime();
         }
         
@@ -81,6 +85,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             Debug.Log("pressed move");
             Debug.Log(normalInputX);
+            moveInput = true;
 
         }
         if (context.canceled)
@@ -88,7 +93,15 @@ public class PlayerInputHandler : MonoBehaviour
             
             
         }
-        
+        if (player.CheckIfTouchingWall())
+        {
+            GrabInput = true;
+        }
+        else if (!player.CheckIfTouchingWall())
+        {
+            GrabInput = false;
+        }
+
     }
    public void OnJumpInput(InputAction.CallbackContext context)
     {
@@ -104,8 +117,16 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log("released jump");
             JumpInputStop = true;
         }
-        
-        
+        if (player.CheckIfTouchingWall())
+        {
+            GrabInput = true;
+        }
+        else if (!player.CheckIfTouchingWall())
+        {
+            GrabInput = false;
+        }
+
+
     }
     public void OnRunJumpInput(InputAction.CallbackContext context)
     {
@@ -115,13 +136,22 @@ public class PlayerInputHandler : MonoBehaviour
             RunJumpInput = true;
             RunJumpInputStop = false;
             runJumpInputStartTime = Time.time;
+            
         }
         if (context.canceled && RunJumpInput)
         {
             Debug.Log("released run jump");
             RunJumpInputStop = true;
         }
+        if (player.CheckIfTouchingWall())
+        {
+            GrabInput = true;
+        }else if (!player.CheckIfTouchingWall())
+        {
+            GrabInput = false;
+        }
     }
+   
     public void UseJumpInput()
     {
         JumpInput = false;
@@ -132,11 +162,16 @@ public class PlayerInputHandler : MonoBehaviour
         RunJumpInput = false;
         Debug.Log("userunjumpinput from inputhandler");
     }
+    public void UseMoveInput()
+    {
+        moveInput = false;
+    }
     private void CheckRunJumpInputHoldTime()
     {
         if(Time.time >= runJumpInputStartTime + inputHoldTime)
         {
-            Debug.Log("checkrunjumpinputholdtime");
+            float time = jumpInputStartTime + inputHoldTime;
+            Debug.Log("checkrunjumpinputholdtime"+time);
             RunJumpInput = false;
         }
     }
@@ -144,7 +179,8 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if(Time.time >= jumpInputStartTime + inputHoldTime)
         {
-            Debug.Log("checkjumpinputHoldTime");
+            float time = jumpInputStartTime + inputHoldTime;
+            Debug.Log("checkjumpinputHoldTime"+time);
             JumpInput = false;
         }
     }

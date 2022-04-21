@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerRunJumpLanding : PlayerGroundedState
 {
-    
+    private int normalInputX;
 
     public PlayerRunJumpLanding(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -12,21 +12,26 @@ public class PlayerRunJumpLanding : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
-        xInput = (int)player.InputHandler.inputX;
+        normalInputX = player.InputHandler.normalInputX;
     }
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if(xInput != 0)
+        if (!isExitingState)
         {
-            Debug.Log("xinput != 0 in run jump landing");
-            stateMachine.ChangeState(player.MoveState);
+            Debug.Log("runjumplanding" + isExitingState);
+            if (normalInputX != 0)
+            {
+                Debug.Log("xinput != 0 in run jump landing chamge to move"+stateMachine.CurrentState);
+                stateMachine.ChangeState(player.MoveState);
+            }
+            else if (isAnimationFinished)
+            {
+                Debug.Log("animation finished for run jump landing going to idle" + stateMachine.CurrentState);
+                stateMachine.ChangeState(player.IdleState);
+            }
         }
-        else if(isAnimationFinished)
-        {
-            Debug.Log("animation finished for run jump landing going to idle");
-            stateMachine.ChangeState(player.IdleState);
-        }
+        
     }
 
 }

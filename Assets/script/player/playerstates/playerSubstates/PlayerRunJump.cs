@@ -46,11 +46,12 @@ public class PlayerRunJump : PlayerAbilityState
     {
         if(amountOfRunJumpsLeft > 0)
         {
-            Debug.Log("can run jump");
+            Debug.Log("runjumpleft"+amountOfRunJumpsLeft);
             return true;
         }
         else
         {
+            Debug.Log("runjumpleft" + amountOfRunJumpsLeft);
             return false;
         }
     }

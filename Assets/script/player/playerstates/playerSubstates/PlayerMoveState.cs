@@ -26,16 +26,37 @@ public class PlayerMoveState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if (!isExitingState)
+        {
+            if (isTouchingWall && GrabInput)
+            {
+                Debug.Log("istouching grabinput from" + stateMachine.CurrentState); stateMachine.ChangeState(player.WallGrabState);
+            }
+            else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
+            {
+                Debug.Log("wallslide from" + stateMachine.CurrentState); stateMachine.ChangeState(player.WallSlideState);
+            }
+            else if (normalInputX == 0)
+            {
+                Debug.Log("idle");
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else
+            {
+                Debug.Log("movecharacter");
+                player.MoveCharacter();
+            }
 
-        player.MoveCharacter();
+        }
+
 
         //player.MoveCharacter(playerData.movementAcceleration * xInput);
         //player.SetVelocityX(playerData.movementAcceleration * xInput);
-        Debug.Log(player.InputHandler.normalInputX+"normalx+inputx"+player.InputHandler.inputX);
-        if(xInput == 0f)
-        {
-            stateMachine.ChangeState(player.IdleState);
-        }
+
+        //if(xInput == 0f && !isExitingState)
+        //{
+        //    stateMachine.ChangeState(player.IdleState);
+        //}
     }
 
     public override void PhysicUpdate()

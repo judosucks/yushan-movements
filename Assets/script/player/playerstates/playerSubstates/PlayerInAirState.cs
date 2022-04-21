@@ -24,6 +24,8 @@ public class PlayerInAirState : PlayerState
 
     private int normalInputX;
 
+    private bool GrabInput;
+
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -58,7 +60,7 @@ public class PlayerInAirState : PlayerState
         normalInputX = player.InputHandler.normalInputX;
         jumpInput = player.InputHandler.JumpInput;
         jumpInputStop = player.InputHandler.JumpInputStop;
-
+        GrabInput = player.InputHandler.GrabInput;
         CheckJumpMultiplier();
 
         Debug.Log("isgrounded from inaire" + isGrounded + "xinput" + xInput+"normal"+normalInputX);
@@ -69,25 +71,36 @@ public class PlayerInAirState : PlayerState
             stateMachine.ChangeState(player.LandState);
 
             Debug.Log("state change land state excuted from in air state");
-        } else if (jumpInput && canJump)
+        }
+        else if (jumpInput && isTouchingWall)
+        {
+            Debug.Log("walljumpinput" + stateMachine.CurrentState); stateMachine.ChangeState(player.WallJumpState);
+        }
+        else if (jumpInput && canJump)
         {
             Debug.Log("jumpinput canjump from in air state" + jumpInput + canJump);
-
+            player.InputHandler.UseJumpInput();
             stateMachine.ChangeState(player.JumpState);
 
-        } else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
+        }
+        else if (isTouchingWall && GrabInput)
         {
-            Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection+"normalx"+normalInputX);
+            Debug.Log("grabwall from air state" + stateMachine.CurrentState);
+            stateMachine.ChangeState(player.WallGrabState);
+        }
+        else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
+        {
+            Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection + "normalx" + normalInputX);
             stateMachine.ChangeState(player.WallSlideState);
         }
         else
         {
 
-            player.SetVelocityX(playerData.inAirMovementForce * xInput);
-            player.Anim.SetFloat("yVelocity", player.rb.velocity.y);
-            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.rb.velocity.x));
+                     player.SetVelocityX(playerData.inAirMovementForce);
+            player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
+            player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
 
-            Debug.Log("is not jump run grounded" + player.CurrentVelocity.y + stateMachine.CurrentState);
+            Debug.Log("else in air state" + stateMachine.CurrentState);
         }
     }
 

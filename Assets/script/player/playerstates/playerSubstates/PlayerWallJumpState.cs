@@ -2,17 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWallJumpState : MonoBehaviour
+public class PlayerWallJumpState : PlayerAbilityState
+
+
 {
-    // Start is called before the first frame update
-    void Start()
+    private int wallJumpDirection;
+
+    public PlayerWallJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Enter()
     {
-        
+        base.Enter();
+        player.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
+        player.CheckIfShouldFlip(wallJumpDirection);
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+    }
+    public void DetermineWallJumpDirection(bool isTouchingWall)
+    {
+        if (isTouchingWall)
+        {
+            wallJumpDirection = player.facingDirection;
+        }
+        else
+        {
+            wallJumpDirection = -player.facingDirection;
+        }
     }
 }

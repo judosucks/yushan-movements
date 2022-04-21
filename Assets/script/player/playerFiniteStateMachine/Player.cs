@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public PlayerWallClimbState WallClimbState { get; private set; }
     public PlayerWallGrabState WallGrabState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
     [SerializeField]
     private PlayerData playerData;
     #endregion
@@ -88,7 +89,7 @@ public class Player : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, stateMachine, playerData, "wallSlide");
         WallClimbState = new PlayerWallClimbState(this, stateMachine, playerData, "wallClimb");
         WallGrabState = new PlayerWallGrabState(this, stateMachine, playerData, "wallGrab");
-
+        WallJumpState = new PlayerWallJumpState(this, stateMachine, playerData, "runJumpInAir");
 
 
         
@@ -215,20 +216,21 @@ public class Player : MonoBehaviour
         float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
         Speed = movementPerFrame / Time.deltaTime;
         PreviousFramePosition = transform.position;
-       
+        Debug.Log("movecharacter" + Speed);
         if (Mathf.Abs(rb.velocity.x)> playerData.moveMaxSpeed)
         {
-           
+            Debug.Log("speed" + Mathf.Abs(rb.velocity.x) + " is larger than " + playerData.moveMaxSpeed + "maxspeed");
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerData.moveMaxSpeed, CurrentVelocity.y);
             
         }
         if (InputHandler.inputX != 0f && CheckGrounded())
         {
             Debug.Log("checkdirectiontoface");
-            CheckDirectionToFace(InputHandler.inputX > 0f);
+            CheckIfShouldFlip(InputHandler.normalInputX);
+            //CheckDirectionToFace(InputHandler.inputX > 0f);
             
         }
-        Debug.Log("isgrounded" + CheckGrounded());
+        Debug.Log("movecharacter isgrounded" + CheckGrounded());
     }
     //public void Jumping()
     //{
@@ -291,26 +293,26 @@ public class Player : MonoBehaviour
     //    Debug.Log("apply air linear drag"+rb.velocity.x+"y"+rb.velocity.y+"curr"+stateMachine.CurrentState);
     //    rb.drag = playerData.airLinearDrag;
     //}
+    public void SetVelocity(float velocity,Vector2 angle,int direction)
+    {
+        angle.Normalize();
+        workspace.Set(angle.x * velocity * direction, angle.y * velocity);
+        rb.velocity = workspace;
+        CurrentVelocity = workspace;
+    }
+
     public void SetVelocityX(float velocity)
     {
         //Animator animator = GetComponentInChildren<Animator>();
         //AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        workspace.Set(velocity, rb.velocity.y);
+        workspace.Set(InputHandler.inputX, rb.velocity.y);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
-        Vector2 land = Vector2.zero;
+        rb.AddForce(new Vector2(CurrentVelocity.x, 0f) * velocity, ForceMode2D.Force);
         Debug.Log("setvelocityx");
-        if (InputHandler.inputX != 0f && CheckGrounded())
+        if (CheckGrounded())
         {
-            Debug.Log("checkdirectiontoface");
-            CheckDirectionToFace(InputHandler.inputX > 0f);
-
-        }else if(CheckGrounded()&& stateMachine.CurrentState == LandState || stateMachine.CurrentState == RunJumpLandState)
-        {
-
-            Debug.Log("else if" + CurrentVelocity+stateMachine.CurrentState);
-            CurrentVelocity = land;
-            
+            CheckIfShouldFlip(InputHandler.normalInputX);
         }
 
     }
@@ -392,13 +394,20 @@ public class Player : MonoBehaviour
       
             
     }
+    public void CheckIfShouldFlip(int normalInputX)
+    {
+        if(normalInputX != 0 && normalInputX != facingDirection)
+        {
+            Turn();
+        }
+    }
     
     public bool CheckGrounded()
     {
       RaycastHit2D hit2d = Physics2D.Raycast(transform.position, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
         if(hit2d.collider != null)
         {
-            Debug.Log(hit2d.collider.name);
+            
             return true;
         }
         else

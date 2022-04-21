@@ -24,6 +24,8 @@ public class PlayerRunJumpInAir : PlayerState
 
     private int normalInputX;
 
+    private bool GrabInput;
+
     public PlayerRunJumpInAir(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -58,17 +60,27 @@ public class PlayerRunJumpInAir : PlayerState
         normalInputX = player.InputHandler.normalInputX;
         runJumpInput = player.InputHandler.RunJumpInput;
         RunJumpInputStop = player.InputHandler.RunJumpInputStop;
+        GrabInput = player.InputHandler.GrabInput;
         CheckRunJumpMultiplier();
         if (isGrounded && player.CurrentVelocity.y <0.01f )
         {
             Debug.Log("isgrounded" + stateMachine.CurrentState);
             stateMachine.ChangeState(player.RunJumpLandState);
             
-        }else if(runJumpInput && canRunJump)
+        }else if(runJumpInput && isTouchingWall)
+        {
+            Debug.Log("walljumpinput" + stateMachine.CurrentState);
+            stateMachine.ChangeState(player.WallJumpState);
+        }
+        else if(runJumpInput && canRunJump)
         {
             
             Debug.Log("going to run jump state from in air state");
+            player.InputHandler.UseRunJumpInput();
             stateMachine.ChangeState(player.RunJumpState);
+        }else if(isTouchingWall && GrabInput)
+        {
+            stateMachine.ChangeState(player.WallGrabState);
         }
         else if (isTouchingWall && normalInputX == player.facingDirection && player.CurrentVelocity.y <= 0f)
         {
@@ -79,7 +91,7 @@ public class PlayerRunJumpInAir : PlayerState
         else
         {
 
-            player.SetVelocityX(playerData.inAirMovementForce * xInput);
+            player.SetVelocityX(playerData.movementAcceleration);
             player.Anim.SetFloat("y", player.CurrentVelocity.y);
             player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
             Debug.Log("is not jump run grounded" + xInput+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
