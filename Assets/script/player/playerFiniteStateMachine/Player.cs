@@ -216,7 +216,7 @@ public class Player : MonoBehaviour
         float movementPerFrame = Vector2.Distance(PreviousFramePosition, transform.position);
         Speed = movementPerFrame / Time.deltaTime;
         PreviousFramePosition = transform.position;
-        Debug.Log("movecharacter" + Speed);
+        
         if (Mathf.Abs(rb.velocity.x)> playerData.moveMaxSpeed)
         {
             Debug.Log("speed" + Mathf.Abs(rb.velocity.x) + " is larger than " + playerData.moveMaxSpeed + "maxspeed");

@@ -18,8 +18,10 @@ public class PlayerWallGrabState : PlayerWallTouchingState
     public override void Enter()
     {
         base.Enter();
+
         holdPosition = player.transform.position;
         HoldPosition();
+        Debug.Log("holdposition"+stateMachine.CurrentState);
     }
 
     public override void Exit()
@@ -30,21 +32,22 @@ public class PlayerWallGrabState : PlayerWallTouchingState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        HoldPosition();
+       
 
         if (!isExitingState)
         {
-            player.InputHandler.UseGrabInput();
-            Debug.Log("usejumpinput" + GrabInput);
+            HoldPosition();
+            
+            
             if (normalInputY > 0)
             {
-                Debug.Log("normalInpuy > 0" + stateMachine.CurrentState);
+                Debug.Log("normalInpuy > 0 climb" + stateMachine.CurrentState);
                
                 stateMachine.ChangeState(player.WallClimbState);
             }
             else if (normalInputY < 0 || !GrabInput)
             {
-                Debug.Log("else if < 0" + stateMachine.CurrentState);
+                Debug.Log("else if < 0 slide" + stateMachine.CurrentState);
                 stateMachine.ChangeState(player.WallSlideState);
             }
         }
@@ -61,5 +64,15 @@ public class PlayerWallGrabState : PlayerWallTouchingState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
+    }
+
+    public override void AnimationFinishTrigger()
+    {
+        base.AnimationFinishTrigger();
+    }
+
+    public override void AnimationTrigger()
+    {
+        base.AnimationTrigger();
     }
 }

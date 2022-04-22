@@ -52,21 +52,21 @@ public class PlayerGroundedState : PlayerState
         GrabInput = player.InputHandler.GrabInput;
         if (JumpInput && player.JumpState.canJump())
         {
-            player.InputHandler.UseJumpInput();
+            
             stateMachine.ChangeState(player.JumpState);
-            Debug.Log("ongroundstate usejumpinput from playerinputhandler" +JumpInput);
+            Debug.Log("change jump state" +JumpInput);
         }else if (!isGrounded)
         {
             Debug.Log("going to in air state");
             player.InAirState.StartCoyoteTime();
             stateMachine.ChangeState(player.InAirState);
         }
-        if(RunJumpInput && player.RunJumpState.canRunJump())
+        if (RunJumpInput && player.RunJumpState.canRunJump())
         {
             Debug.Log("going to run jump state");
-            player.InputHandler.UseRunJumpInput();
+
             stateMachine.ChangeState(player.RunJumpState);
-        }else if (!isGrounded && stateMachine.CurrentState == player.RunJumpInAirState || stateMachine.CurrentState == player.RunJumpState)
+        } else if (!isGrounded && stateMachine.CurrentState == player.RunJumpState)
         {
             Debug.Log("going to run jump in air state");
             player.RunJumpInAirState.StartCoyoteTime();
