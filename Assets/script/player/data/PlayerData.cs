@@ -15,10 +15,12 @@ public class PlayerData :ScriptableObject
     public float frictionAmount;//drag on ground
     [Header("Other physics")]
     [Range(0, 0.5f)] public float coyoteTime;//grace time to Jump after player has fallen off a playformer
+    [Range(0, 0.5f)] public float runJumpCoyoteTime;
 
     [Header("wall jump state")]
     public float wallJumpVelocity = 20f;
     public float wallJumpTime = 0.4f;
+    public float runJumpWallJumpTime = 0.4f;
     public Vector2 wallJumpAngle = new Vector2(1, 2);
     [Header("wall climb state")]
     public float wallClimbVelocity = 3f;

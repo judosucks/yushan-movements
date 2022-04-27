@@ -63,6 +63,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void Update()
     {
+        
         if(normalInputX == 0f)
         {
             Debug.Log("checkjumpinputholdtime");
@@ -77,6 +78,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
+    
         RawMovementInput = context.ReadValue<Vector2>();
 
         inputX = (RawMovementInput*Vector2.right).x;
@@ -92,9 +94,9 @@ public class PlayerInputHandler : MonoBehaviour
         }
         if (context.canceled)
         {
-            
-            
+            Debug.Log("canceled press move");
         }
+       
        
 
     }
@@ -112,19 +114,13 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log("released jump");
             JumpInputStop = true;
         }
-        if (player.CheckIfTouchingWall())
-        {
-            GrabInput = true;
-        }
-        else if (!player.CheckIfTouchingWall())
-        {
-            GrabInput = false;
-        }
+        
 
 
     }
     public void OnRunJumpInput(InputAction.CallbackContext context)
     {
+    
         if (context.started && inputX != 0f)
         {
             Debug.Log("pressed run jump");
@@ -138,15 +134,19 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log("released run jump");
             RunJumpInputStop = true;
         }
-        if (player.CheckIfTouchingWall())
+        
+    }
+    public void OnGrabInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
         {
             GrabInput = true;
-        }else if (!player.CheckIfTouchingWall())
+        }
+        if (context.canceled)
         {
-            GrabInput = false;
+            Debug.Log("released");
         }
     }
-   
     public void UseJumpInput()
     {
         JumpInput = false;

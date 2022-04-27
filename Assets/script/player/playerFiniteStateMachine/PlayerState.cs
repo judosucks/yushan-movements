@@ -9,6 +9,7 @@ public class PlayerState
     protected PlayerData playerData;
     protected bool isExitingState;
     protected float startTime;
+    protected float runJumpStartTime;
     public bool isAnimationFinished;
     private string animBoolName;
 
@@ -25,6 +26,7 @@ public class PlayerState
         DoChecks();
         player.Anim.SetBool(animBoolName, true);
         startTime = Time.time;
+        runJumpStartTime = Time.time;
         isAnimationFinished = false;
         isExitingState = false;
         Debug.Log("playerstate aniboolname"+animBoolName);       

@@ -18,7 +18,7 @@ public class PlayerWallClimbState : PlayerWallTouchingState
         {
             Debug.Log("wallclimb"+player.CurrentVelocity.y);
             player.SetVelocityY(playerData.wallClimbVelocity);
-            if (normalInputY != 1 && !isExitingState)
+            if (normalInputY != 1)
             {
                 Debug.Log("change to wall grab");
                 stateMachine.ChangeState(player.WallGrabState);

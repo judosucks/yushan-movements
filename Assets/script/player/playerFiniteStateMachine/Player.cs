@@ -299,6 +299,7 @@ public class Player : MonoBehaviour
         workspace.Set(angle.x * velocity * direction, angle.y * velocity);
         rb.velocity = workspace;
         CurrentVelocity = workspace;
+        Debug.Log("setvelocity");
     }
 
     public void SetVelocityX(float velocity)
@@ -310,10 +311,10 @@ public class Player : MonoBehaviour
         CurrentVelocity = workspace;
         
         Debug.Log("setvelocityx");
-        if (CheckGrounded())
-        {
+     
+        
             CheckIfShouldFlip(InputHandler.normalInputX);
-        }
+        
 
     }
    
@@ -425,6 +426,15 @@ public class Player : MonoBehaviour
         //return Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector3.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsWall);
        
         
+    }
+    public bool CheckIfTouchingWallBack()
+    {
+
+        return Physics2D.Raycast(wallCheck.position, Vector2.right * -facingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
+
+        //return Physics2D.Raycast(transform.position * playerData.wallCheckDistance, Vector3.right * facingDirection, playerData.wallCheckDistance, playerData.whatIsWall);
+
+
     }
     public void OnDrawGizmos()
     {

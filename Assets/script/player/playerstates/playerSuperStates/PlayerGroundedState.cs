@@ -69,7 +69,7 @@ public class PlayerGroundedState : PlayerState
         } else if (!isGrounded && stateMachine.CurrentState == player.RunJumpState)
         {
             Debug.Log("going to run jump in air state");
-            player.RunJumpInAirState.StartCoyoteTime();
+            player.RunJumpInAirState.StartRunJumpCoyoteTime();
             stateMachine.ChangeState(player.RunJumpInAirState);
         }else if(isTouchingWall && GrabInput)
         {

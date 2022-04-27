@@ -16,10 +16,12 @@ MonoBehaviour:
   dragAmount: 3.61
   frictionAmount: 0.3
   coyoteTime: 0.5
-  wallJumpVelocity: 20
-  wallJumpTime: 0.4
-  wallJumpAngle: {x: 1, y: 2}
-  wallClimbVelocity: 3
+  runJumpCoyoteTime: 0.5
+  wallJumpVelocity: 29.48
+  wallJumpTime: 1.35
+  runJumpWallJumpTime: 1.39
+  wallJumpAngle: {x: 4.42, y: -7.6}
+  wallClimbVelocity: 7.54
   runMaxSpeed: 20.39
   runAccel: 9.4
   runDeccel: 4.63

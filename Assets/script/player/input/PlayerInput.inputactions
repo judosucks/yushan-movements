@@ -20,13 +20,22 @@
                     "id": "4b76fea2-57bf-404e-8f2c-563066832df1",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
                     "name": "RunJump",
                     "type": "Button",
                     "id": "85c525c6-ef94-4f67-a3ea-38871e0c3461",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GrabWall",
+                    "type": "Button",
+                    "id": "5f885889-bb04-486f-9b67-e80773be5ee1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -70,7 +79,7 @@
                 {
                     "name": "down",
                     "id": "57adcc61-c18a-49af-a55e-4eb00fd0eaa4",
-                    "path": "<Keyboard>/x",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -137,7 +146,7 @@
                     "name": "",
                     "id": "9ce32b93-85d6-4c03-9c41-b94cf03e1f74",
                     "path": "<DualShockGamepad>/buttonSouth",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
                     "action": "Jump",
@@ -174,6 +183,39 @@
                     "processors": "",
                     "groups": "gamepad",
                     "action": "RunJump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2bf634b-a148-4b83-b000-a5a2c13cef77",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "GrabWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e2ad5f7-d3c8-45aa-8bd1-95b3b9865a13",
+                    "path": "<DualShockGamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "gamepad",
+                    "action": "GrabWall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "287c956f-eeb4-42c9-bba9-1afc0e2d846c",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "gamepad",
+                    "action": "GrabWall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

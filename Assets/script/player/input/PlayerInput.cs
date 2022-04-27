@@ -42,13 +42,22 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""4b76fea2-57bf-404e-8f2c-563066832df1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""RunJump"",
                     ""type"": ""Button"",
                     ""id"": ""85c525c6-ef94-4f67-a3ea-38871e0c3461"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GrabWall"",
+                    ""type"": ""Button"",
+                    ""id"": ""5f885889-bb04-486f-9b67-e80773be5ee1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -92,7 +101,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""57adcc61-c18a-49af-a55e-4eb00fd0eaa4"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""keyboard"",
@@ -159,7 +168,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""9ce32b93-85d6-4c03-9c41-b94cf03e1f74"",
                     ""path"": ""<DualShockGamepad>/buttonSouth"",
-                    ""interactions"": ""Press"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""Jump"",
@@ -196,6 +205,39 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""RunJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2bf634b-a148-4b83-b000-a5a2c13cef77"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""GrabWall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e2ad5f7-d3c8-45aa-8bd1-95b3b9865a13"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""GrabWall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""287c956f-eeb4-42c9-bba9-1afc0e2d846c"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""GrabWall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -242,6 +284,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_RunJump = m_Gameplay.FindAction("RunJump", throwIfNotFound: true);
+        m_Gameplay_GrabWall = m_Gameplay.FindAction("GrabWall", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -304,6 +347,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_RunJump;
+    private readonly InputAction m_Gameplay_GrabWall;
     public struct GameplayActions
     {
         private @PlayerInput m_Wrapper;
@@ -311,6 +355,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @RunJump => m_Wrapper.m_Gameplay_RunJump;
+        public InputAction @GrabWall => m_Wrapper.m_Gameplay_GrabWall;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -329,6 +374,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @RunJump.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
                 @RunJump.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
                 @RunJump.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
+                @GrabWall.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
+                @GrabWall.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
+                @GrabWall.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -342,6 +390,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @RunJump.started += instance.OnRunJump;
                 @RunJump.performed += instance.OnRunJump;
                 @RunJump.canceled += instance.OnRunJump;
+                @GrabWall.started += instance.OnGrabWall;
+                @GrabWall.performed += instance.OnGrabWall;
+                @GrabWall.canceled += instance.OnGrabWall;
             }
         }
     }
@@ -369,5 +420,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnRunJump(InputAction.CallbackContext context);
+        void OnGrabWall(InputAction.CallbackContext context);
     }
 }
