@@ -65,7 +65,7 @@ public class PlayerRunJumpInAir : PlayerState
     public override void Exit()
     {
         base.Exit();
-        
+        player.SetGravityScale(playerData.gravityScale);
     }
 
     public override void LogicUpdate()
@@ -93,7 +93,7 @@ public class PlayerRunJumpInAir : PlayerState
             StopRunJumpWallJumpCoyoteTime();
             isTouchingWall = player.CheckIfTouchingWall();
             player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
-            player.InputHandler.UseGrabInput();  stateMachine.ChangeState(player.WallJumpState);
+             stateMachine.ChangeState(player.WallJumpState);
         }
         else if(runJumpInput && canRunJump)
         {
@@ -111,13 +111,25 @@ public class PlayerRunJumpInAir : PlayerState
             Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection);
             stateMachine.ChangeState(player.WallSlideState);
         }
+        else if (player.rb.velocity.y < 0)
+        {
+            //quick fall when holding down: feels responsive, adds some bonus depth with very little added complexity and great for speedrunners :D (In games such as Celeste and Katana ZERO)
+            if (player.InputHandler.normalInputY < 0)
+            {
+                player.SetGravityScale(playerData.gravityScale * playerData.quickFallGravityMultiplier);
+            }
+            else
+            {
+                player.SetGravityScale(playerData.gravityScale * playerData.fallGravityMultiplier);
+            }
+        }
         else
         {
            
-            player.SetVelocityX(playerData.inAirMovementForce * xInput);
-            player.Anim.SetFloat("y", player.CurrentVelocity.y);
-            player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
-            Debug.Log("is in air" + player.CurrentVelocity.x+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
+            //player.SetVelocityX(playerData.inAirMovementForce * xInput);
+            //player.Anim.SetFloat("y", player.CurrentVelocity.y);
+            //player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
+            //Debug.Log("is in air" + player.CurrentVelocity.x+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
            
         }
 
@@ -126,6 +138,8 @@ public class PlayerRunJumpInAir : PlayerState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
+        player.Drag(playerData.dragAmount);
+        player.Run(1);
     }
     
     private void CheckRunJumpCoyoteTime()

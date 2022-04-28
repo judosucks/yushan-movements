@@ -9,6 +9,10 @@ public class PlayerData :ScriptableObject
     //PHYSICS
     [Header("Gravity")]
     public float gravityScale;//overrides rb.gravityScale
+    public float quickFallGravityMultiplier;
+
+    public float fallGravityMultiplier;
+
 
     [Header("Drag")]
     public float dragAmount;//drag is air
@@ -22,6 +26,10 @@ public class PlayerData :ScriptableObject
     public float wallJumpTime = 0.4f;
     public float runJumpWallJumpTime = 0.4f;
     public Vector2 wallJumpAngle = new Vector2(1, 2);
+    public Vector2 wallJumpForce;
+    public float wallJumpRunLerp;
+
+
     [Header("wall climb state")]
     public float wallClimbVelocity = 3f;
     //GROUND
@@ -69,4 +77,8 @@ public class PlayerData :ScriptableObject
 
     [Header("wall slide state")]
     public float wallSlideVelocity = 3f;
+
+    [Header("OTHER")]
+    public bool doKeepRunMomentum;
+
 }

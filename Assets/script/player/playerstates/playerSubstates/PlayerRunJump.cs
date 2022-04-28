@@ -25,9 +25,9 @@ public class PlayerRunJump : PlayerAbilityState
 
 
         player.InputHandler.UseRunJumpInput();
-        //player.RunJumping(playerData.runJumpForce);
+        player.RunJump();
 
-        player.SetVelocityY(playerData.runJumpForce);
+        //player.SetVelocityY(playerData.runJumpForce);
 
         isAbilityRunJumpDone = true;
             amountOfRunJumpsLeft--;
@@ -40,8 +40,14 @@ public class PlayerRunJump : PlayerAbilityState
         
        
     }
+    public override void PhysicUpdate()
+    {
+        base.PhysicUpdate();
+        player.Drag(playerData.dragAmount);
+        player.Run(1);
+    }
 
-    
+
     public bool canRunJump()
     {
         if(amountOfRunJumpsLeft > 0)

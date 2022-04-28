@@ -18,23 +18,23 @@ public class PlayerWallJumpState : PlayerAbilityState
         Debug.Log("walljumpstate");
         player.RunJumpState.ResetAmountOfRunJumpsLeft();
         player.JumpState.ResetAmountOfJumpsLeft();
-        player.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
-        player.CheckIfShouldFlip(wallJumpDirection);
+        wallJumpDirection = player.facingDirection;
+        player.WallJump(wallJumpDirection);
         player.JumpState.DeCreaseAmountOfJumpsLeft();
         player.RunJumpState.DecreaseAmountOfRunJumpsLeft();
-        Debug.Log(wallJumpDirection);
+        Debug.Log("isfacingright"+player.IsFacingRight+"sss"+wallJumpDirection);
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
-        player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
-        if(Time.time >= startTime * playerData.wallJumpTime)
-        {
-            isAbilityDone = true;
-        }
+        //player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
+        //player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
+        //if(Time.time >= startTime * playerData.wallJumpTime)
+        //{
+        //    isAbilityDone = true;
+        //}
         player.Anim.SetFloat("y", player.CurrentVelocity.y);
         player.Anim.SetFloat("x", Mathf.Abs(player.CurrentVelocity.x));
 
@@ -43,6 +43,12 @@ public class PlayerWallJumpState : PlayerAbilityState
             //isAbilityDone = true;
             isAbilityRunJumpDone = true;
         }
+    }
+    public override void PhysicUpdate()
+    {
+        base.PhysicUpdate();
+        player.Drag(playerData.dragAmount);
+        player.Run(playerData.wallJumpRunLerp);
     }
     public void DetermineWallJumpDirection(bool isTouchingWall)
     {

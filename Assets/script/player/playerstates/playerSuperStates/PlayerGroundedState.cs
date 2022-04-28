@@ -81,8 +81,8 @@ public class PlayerGroundedState : PlayerState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
-        
-        //Debug.Log("drag from groundstate");
+
+        player.Drag(playerData.frictionAmount);        //Debug.Log("drag from groundstate");
        
     }
 }
