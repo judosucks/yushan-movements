@@ -28,7 +28,7 @@ public class PlayerJumpState : PlayerAbilityState
             Debug.Log("inpux is 0 straight jump");
 
         player.InputHandler.UseJumpInput();
-        player.SetVelocityY(playerData.straightJumpHeight);
+        player.StraightJump();
        
             isAbilityDone = true;
             amountOfJumpsLeft--;

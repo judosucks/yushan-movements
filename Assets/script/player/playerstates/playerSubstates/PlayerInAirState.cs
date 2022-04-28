@@ -115,10 +115,27 @@ public class PlayerInAirState : PlayerState
             Debug.Log("chaning to wall slide state" + isTouchingWall + "" + xInput + "" + player.facingDirection + "normalx" + normalInputX);
             stateMachine.ChangeState(player.WallSlideState);
         }
+        else if (player.rb.velocity.y < 0)
+        {
+            Debug.Log("if p rb v y < 0");
+            //quick fall when holding down: feels responsive, adds some bonus depth with very little added complexity and great for speedrunners :D (In games such as Celeste and Katana ZERO)
+            if (player.InputHandler.normalInputY < 0)
+            {
+                Debug.Log("p in nory < 0");
+                player.SetGravityScale(playerData.gravityScale * playerData.quickFallGravityMultiplier);
+            }
+            else
+            {
+                Debug.Log("else setgravityscale");
+                player.SetGravityScale(playerData.gravityScale * playerData.fallGravityMultiplier);
+            }
+        }
         else
         {
-                     
-                     player.SetVelocityX(playerData.inAirMovementForce * xInput);
+            player.Drag(playerData.dragAmount);
+            player.Run(1);
+
+            //         player.SetVelocityX(playerData.inAirMovementForce * xInput);
             player.Anim.SetFloat("yVelocity", player.CurrentVelocity.y);
             player.Anim.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
 
@@ -129,6 +146,8 @@ public class PlayerInAirState : PlayerState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
+        //player.Drag(playerData.dragAmount);
+        //player.Run(1);
     }
     private void CheckCoyoteTime()
     {

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+ 
+
     public static Player instance;
     #region State Variables
     public PlayerStateMachine stateMachine { get; private set; }
@@ -63,6 +65,8 @@ public class Player : MonoBehaviour
     public bool changeingDirection => (rb.velocity.x > 0f && InputHandler.inputX < 0f) || (rb.velocity.x < 0f && InputHandler.inputX > 0f);
     private void Awake()
     {
+   
+
         #region Singleton
         if (instance == null)
         {
@@ -119,6 +123,7 @@ public class Player : MonoBehaviour
         
             if (rb.velocity.y >= 0 || isWallJump)
         {
+            Debug.Log("iswalljump");
             SetGravityScale(playerData.gravityScale);
         }
                 
@@ -143,7 +148,11 @@ public class Player : MonoBehaviour
         
         
             if (rb.velocity.y >= 0 || isWallJump)
-                SetGravityScale(playerData.gravityScale);
+        {
+            Debug.Log("rb v y >= 0 or w jump setgra");
+            SetGravityScale(playerData.gravityScale);
+        }
+        
             else if (InputHandler.normalInputY < 0)
         {
             Debug.Log("quick fall multiplier");
@@ -152,7 +161,7 @@ public class Player : MonoBehaviour
 
         else
         {
-
+            Debug.Log("else player setgra");
             SetGravityScale(playerData.gravityScale * playerData.fallGravityMultiplier);
 
         }
@@ -220,7 +229,7 @@ public class Player : MonoBehaviour
         //gets an accleration value based of if we are accelerating(includes turning) or trying to stop(decelerating).as well as applying a mutiplier if we are in air borne 加速跟減速 當玩家在空中時執行乘法落下(加速)
         if (LastOnGroundTime > 0)
         {
-            Debug.Log("lastongroundtime");
+            Debug.Log("lastongroundtime"+accelRate);
             accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? playerData.runAccel : playerData.runDeccel;
         }
         else
@@ -258,6 +267,7 @@ public class Player : MonoBehaviour
 
 
         float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
+        Debug.Log(movement + "rbvx" + rb.velocity.x);
         movement = Mathf.Lerp(rb.velocity.x, movement, lerpAmount);// lerp so that we can prevent the Run from immediately slowing the player down, in some situations eg wall jump, dash 
 
         rb.AddForce(movement * Vector2.right); //applies force force to rigibody,multiplying by vector2.right so that it only affects X axis 執行動力來強迫rigibody乘以Vector2.right 將他只在x軌道發生作用
@@ -405,6 +415,7 @@ public class Player : MonoBehaviour
         transform.localScale = scale;
         facingDirection *= -1;
         IsFacingRight = !IsFacingRight;
+        Debug.Log(facingDirection);
     }
     #endregion
     #region OTHER
@@ -462,19 +473,18 @@ public class Player : MonoBehaviour
     public bool CheckGrounded()
     {
       RaycastHit2D hit2d = Physics2D.Raycast(transform.position, Vector2.down, playerData.groundRayCastLength, playerData.whatIsGround);
-        if(hit2d.collider.IsTouchingLayers(playerData.whatIsGround))
+        if(hit2d.collider !=null )
 
         {
-            LastOnGroundTime = playerData.coyoteTime;
-            Debug.Log("isgrounded from check" + playerData.coyoteTime);
-            return true;
+                
+                LastOnGroundTime = playerData.coyoteTime;
+                Debug.Log("isgrounded from check" + playerData.coyoteTime);
+                return true;
         }
         else
         {
-           
             return false;
         }
-      
     }
     public bool CheckIfTouchingWall()
     {

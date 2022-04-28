@@ -125,12 +125,13 @@ public class PlayerRunJumpInAir : PlayerState
         }
         else
         {
-           
+            player.Drag(playerData.dragAmount);
+            player.Run(1);
             //player.SetVelocityX(playerData.inAirMovementForce * xInput);
-            //player.Anim.SetFloat("y", player.CurrentVelocity.y);
-            //player.Anim.SetFloat("x",Mathf.Abs(player.CurrentVelocity.x));
-            //Debug.Log("is in air" + player.CurrentVelocity.x+"xinput"+ player.CurrentVelocity.y+"isrunjumpstate"+stateMachine.CurrentState+normalInputX);
-           
+            player.Anim.SetFloat("y", player.CurrentVelocity.y);
+            player.Anim.SetFloat("x", Mathf.Abs(player.CurrentVelocity.x));
+            Debug.Log("is in air" + player.CurrentVelocity.x + "xinput" + player.CurrentVelocity.y + "isrunjumpstate" + stateMachine.CurrentState + normalInputX);
+
         }
 
     }
@@ -138,8 +139,7 @@ public class PlayerRunJumpInAir : PlayerState
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
-        player.Drag(playerData.dragAmount);
-        player.Run(1);
+       
     }
     
     private void CheckRunJumpCoyoteTime()

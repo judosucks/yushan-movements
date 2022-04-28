@@ -19,7 +19,9 @@ public class PlayerWallJumpState : PlayerAbilityState
         player.RunJumpState.ResetAmountOfRunJumpsLeft();
         player.JumpState.ResetAmountOfJumpsLeft();
         wallJumpDirection = player.facingDirection;
+        player.InputHandler.UseGrabInput();
         player.WallJump(wallJumpDirection);
+
         player.JumpState.DeCreaseAmountOfJumpsLeft();
         player.RunJumpState.DecreaseAmountOfRunJumpsLeft();
         Debug.Log("isfacingright"+player.IsFacingRight+"sss"+wallJumpDirection);
@@ -35,6 +37,7 @@ public class PlayerWallJumpState : PlayerAbilityState
         //{
         //    isAbilityDone = true;
         //}
+        
         player.Anim.SetFloat("y", player.CurrentVelocity.y);
         player.Anim.SetFloat("x", Mathf.Abs(player.CurrentVelocity.x));
 
