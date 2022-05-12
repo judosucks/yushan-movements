@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLandState : PlayerGroundedState
+public class PlayerRunJumpLanding : PlayerGroundedState
 {
-
     private int normalInputX;
 
-    public PlayerLandState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    public PlayerRunJumpLanding(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
     public override void Enter()
@@ -18,21 +17,21 @@ public class PlayerLandState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        Debug.Log("landingstate");
-
         if (!isExitingState)
         {
+            Debug.Log("runjumplanding" + isExitingState);
             if (normalInputX != 0)
             {
-                Debug.Log("xinput != 0 from playerlandstate");
+                Debug.Log("xinput != 0 in run jump landing chamge to move"+stateMachine.CurrentState);
                 stateMachine.ChangeState(player.MoveState);
             }
             else if (isAnimationFinished)
             {
-                Debug.Log("isanimationfinished" + isAnimationFinished + "landstate");
+                Debug.Log("animation finished for run jump landing going to idle" + stateMachine.CurrentState);
                 stateMachine.ChangeState(player.IdleState);
             }
         }
         
     }
+
 }

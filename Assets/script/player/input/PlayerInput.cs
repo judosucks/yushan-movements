@@ -42,6 +42,24 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""4b76fea2-57bf-404e-8f2c-563066832df1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RunJump"",
+                    ""type"": ""Button"",
+                    ""id"": ""85c525c6-ef94-4f67-a3ea-38871e0c3461"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GrabWall"",
+                    ""type"": ""Button"",
+                    ""id"": ""5f885889-bb04-486f-9b67-e80773be5ee1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 }
@@ -52,7 +70,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""id"": ""fd830cad-f1ec-4fdc-a176-35a3edd15147"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""StickDeadzone"",
+                    ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -83,7 +101,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""57adcc61-c18a-49af-a55e-4eb00fd0eaa4"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""keyboard"",
@@ -115,6 +133,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""20b0bba8-b14d-4a70-9e86-80677030f481"",
+                    ""path"": ""<DualShockGamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""50367f8a-848f-4c9a-96e1-f7db3f683764"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -132,6 +161,83 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""gamepad"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ce32b93-85d6-4c03-9c41-b94cf03e1f74"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""99a8cfd4-a35d-4807-a2b1-2dc08de57815"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""RunJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a21133f-29e2-4c98-aeb6-6a93e5a0d876"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""RunJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc2fbd38-ec6c-4b9d-9803-829866da1818"",
+                    ""path"": ""<DualShockGamepad>/buttonSouth"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""RunJump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2bf634b-a148-4b83-b000-a5a2c13cef77"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""GrabWall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e2ad5f7-d3c8-45aa-8bd1-95b3b9865a13"",
+                    ""path"": ""<DualShockGamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""GrabWall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""287c956f-eeb4-42c9-bba9-1afc0e2d846c"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""gamepad"",
+                    ""action"": ""GrabWall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -177,6 +283,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
+        m_Gameplay_RunJump = m_Gameplay.FindAction("RunJump", throwIfNotFound: true);
+        m_Gameplay_GrabWall = m_Gameplay.FindAction("GrabWall", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -238,12 +346,16 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Jump;
+    private readonly InputAction m_Gameplay_RunJump;
+    private readonly InputAction m_Gameplay_GrabWall;
     public struct GameplayActions
     {
         private @PlayerInput m_Wrapper;
         public GameplayActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
+        public InputAction @RunJump => m_Wrapper.m_Gameplay_RunJump;
+        public InputAction @GrabWall => m_Wrapper.m_Gameplay_GrabWall;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -259,6 +371,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
+                @RunJump.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
+                @RunJump.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
+                @RunJump.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRunJump;
+                @GrabWall.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
+                @GrabWall.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
+                @GrabWall.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrabWall;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -269,6 +387,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @RunJump.started += instance.OnRunJump;
+                @RunJump.performed += instance.OnRunJump;
+                @RunJump.canceled += instance.OnRunJump;
+                @GrabWall.started += instance.OnGrabWall;
+                @GrabWall.performed += instance.OnGrabWall;
+                @GrabWall.canceled += instance.OnGrabWall;
             }
         }
     }
@@ -295,5 +419,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnRunJump(InputAction.CallbackContext context);
+        void OnGrabWall(InputAction.CallbackContext context);
     }
 }

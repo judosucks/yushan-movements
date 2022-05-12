@@ -12,28 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe44437d5dc840b99205ca955460511, type: 3}
   m_Name: playerData
   m_EditorClassIdentifier: 
-  gravityScale: 2.09
-  fallGravityMult: 0
-  quickFallGravityMult: 0
-  dragAmount: 4.21
-  frictionAmount: 3.51
-  coyoteTime: 0
-  movementSpeed: 5
-  movementAcceleration: 10
-  runMaxSpeed: 20.27
-  runAccel: 15
-  runDeccel: 0.7
-  accelInAir: 0.59
-  deccelInAir: 0.17
-  accelPower: 1.17
-  stopPower: 0.58
-  turnPower: 0.5
-  jumpForce: 18.51
-  jumpCutMultiplier: 0
-  jumpBufferTime: 0
-  doKeepRunMomentum: 0
-  doTurnOnWallJump: 0
-  groundCheckRadius: 0.3
+  gravityScale: 5.36
+  quickFallGravityMultiplier: 2.34
+  fallGravityMultiplier: 2.24
+  dragAmount: 11.92
+  frictionAmount: 0.18
+  coyoteTime: 0.108
+  runJumpCoyoteTime: 0.111
+  wallJumpVelocity: 29.48
+  wallJumpTime: 1.35
+  runJumpWallJumpTime: 1.39
+  wallJumpAngle: {x: 4.42, y: -7.6}
+  wallJumpForce: {x: 1.62, y: 2.26}
+  wallJumpRunLerp: 1.27
+  wallClimbVelocity: 7.54
+  runMaxSpeed: 17.73
+  runAccel: 3.17
+  runDeccel: 0.59
+  accelInAir: 0.36
+  deccelInAir: 0.15
+  accelPower: 1.766
+  stopPower: 0.965
+  turnPower: 0.935
+  movementAcceleration: 19
+  moveMaxSpeed: 17
+  setVelocityXSpeed: 20
+  variableJumpHeightMultiplier: 0.89
+  variableRunJumpHeightMultiplier: 0.91
+  inAirMovementForce: 4.6
+  runJumpForce: 10.9
+  amountOfJumps: 2
+  straightJumpHeight: 35.6
+  groundCheckRadius: 1.43
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  groundRayCastLength: 1
+  wallCheckDistance: 2
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 64
+  amountOfRunJumps: 2
+  wallSlideVelocity: 13.92
+  doKeepRunMomentum: 0

@@ -26,20 +26,36 @@ public class PlayerMoveState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-       
-
-       
-       
-        if(xInput == 0f)
+        if (!isExitingState)
         {
-            stateMachine.ChangeState(player.IdleState);
+           
+           if (normalInputX == 0)
+            {
+                Debug.Log("idle");
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else
+            {
+                Debug.Log("movecharacter");
+                player.MoveCharacter();
+            }
+
         }
+
+
+        //player.MoveCharacter(playerData.movementAcceleration * xInput);
+        //player.SetVelocityX(playerData.movementAcceleration * xInput);
+
+        //if(xInput == 0f && !isExitingState)
+        //{
+        //    stateMachine.ChangeState(player.IdleState);
+        //}
     }
 
     public override void PhysicUpdate()
     {
         base.PhysicUpdate();
-        player.Run(1);
+        //player.Run(1);
+       
     }
 }
